@@ -1,69 +1,243 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useApp } from '@/store/AppContext';
+import PageTransition from '@/components/PageTransition';
+import DailyTimetable from '@/components/dashboard/DailyTimetable';
+import WeeklySchedule from '@/components/dashboard/WeeklySchedule';
+import StreakWidget from '@/components/dashboard/StreakWidget';
+import AttendanceRing from '@/components/dashboard/AttendanceRing';
+import UpcomingTasks from '@/components/dashboard/UpcomingTasks';
+import DailyQuoteBar from '@/components/DailyQuoteBar';
+import { motion } from 'framer-motion';
+import {
+  Sparkles,
+  BookOpen,
+  Clock,
+  ArrowRight,
+  Play,
+  GraduationCap,
+  CheckCircle2,
+  TrendingUp,
+  Layers,
+  Flame,
+} from 'lucide-react';
+import Link from 'next/link';
+
+export default function Dashboard() {
+  const { state, getTodayTimetable, getUpcomingTasks, getUpcomingExams, getOverallAttendance, getTodayStudyMinutes } = useApp();
+
+  const todayClasses = getTodayTimetable();
+  const upcomingTasks = getUpcomingTasks(4);
+  const upcomingExams = getUpcomingExams(1);
+  const overallAttendance = getOverallAttendance();
+  const todayStudyMins = getTodayStudyMinutes();
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  };
+
+  const today = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+  });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 300, damping: 24 } },
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <PageTransition>
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Nur Alam Signature Hero Project Overview Card */}
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="hero-gradient-card p-6 sm:p-8 rounded-[28px] relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6"
+        >
+          {/* Subtle Ambient Shapes */}
+          <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-white/10 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-indigo-900/40 blur-2xl pointer-events-none" />
+
+          <div className="space-y-3 z-10">
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-white/20 text-white backdrop-blur-md shadow-xs flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                Academic Dashboard • {today}
+              </span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white leading-tight">
+              {getGreeting()}, {state.user.name.split(' ')[0]} 👋
+            </h1>
+
+            <p className="text-xs sm:text-sm font-medium text-white/85 max-w-xl leading-relaxed">
+              Track your semester milestone progress, course schedules, attendance criteria, and exam readiness.
+            </p>
+
+            {/* Micro Highlights */}
+            <div className="flex flex-wrap items-center gap-3 pt-1 text-xs font-semibold text-white/90">
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/15 backdrop-blur-md">
+                <BookOpen className="w-3.5 h-3.5 text-cyan-200" />
+                {todayClasses.length} lectures today
+              </span>
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/15 backdrop-blur-md">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-200" />
+                {upcomingTasks.length} pending tasks
+              </span>
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/15 backdrop-blur-md">
+                <Flame className="w-3.5 h-3.5 text-amber-300" />
+                {state.user.streak} days active
+              </span>
+            </div>
+          </div>
+
+          {/* Right Action CTA Buttons */}
+          <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-start sm:items-center gap-3 z-10 flex-shrink-0">
+            <Link href="/focus">
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                className="px-5 py-3 rounded-2xl bg-white text-primary text-xs font-black shadow-xl hover:bg-white/95 flex items-center gap-2 transition-all"
+              >
+                <Play className="w-4 h-4 fill-primary text-primary" />
+                <span>Start Focus Session</span>
+              </motion.button>
+            </Link>
+
+            {upcomingExams[0] && (
+              <Link href="/exams">
+                <motion.div
+                  whileHover={{ scale: 1.04 }}
+                  className="px-4 py-3 rounded-2xl bg-white/15 hover:bg-white/20 backdrop-blur-md border border-white/25 text-white text-xs font-bold flex items-center gap-2 transition-colors cursor-pointer"
+                >
+                  <GraduationCap className="w-4 h-4 text-amber-300" />
+                  <span className="truncate max-w-[150px]">Next: {upcomingExams[0].title}</span>
+                  <ArrowRight className="w-3.5 h-3.5 opacity-80" />
+                </motion.div>
+              </Link>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Stat Summary Metrics (Nur Alam 4-Card Grid) */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Stat 1 */}
+          <div className="glass p-5 rounded-[24px] flex items-center justify-between">
+            <div>
+              <span className="text-xs font-bold text-muted uppercase tracking-wider">Overall Attendance</span>
+              <div suppressHydrationWarning className="text-2xl sm:text-3xl font-black text-foreground mt-1">
+                {overallAttendance.percentage.toFixed(0)}%
+              </div>
+              <span suppressHydrationWarning className={`text-[11px] font-bold mt-0.5 inline-block ${overallAttendance.percentage >= 75 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                {overallAttendance.percentage >= 75 ? '✓ Above criteria' : '⚠ Below 75%'}
+              </span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+              <TrendingUp className="w-6 h-6" />
+            </div>
+          </div>
+
+          {/* Stat 2 */}
+          <div className="glass p-5 rounded-[24px] flex items-center justify-between">
+            <div>
+              <span className="text-xs font-bold text-muted uppercase tracking-wider">Today&apos;s Focus</span>
+              <div className="text-2xl sm:text-3xl font-black text-foreground mt-1">
+                {todayStudyMins} <span className="text-xs text-muted font-bold">mins</span>
+              </div>
+              <span className="text-[11px] font-bold text-cyan-600 dark:text-cyan-400 mt-0.5 inline-block">
+                Deep work logged
+              </span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center font-bold">
+              <Clock className="w-6 h-6" />
+            </div>
+          </div>
+
+          {/* Stat 3 */}
+          <div className="glass p-5 rounded-[24px] flex items-center justify-between">
+            <div>
+              <span className="text-xs font-bold text-muted uppercase tracking-wider">Subjects Enrolled</span>
+              <div className="text-2xl sm:text-3xl font-black text-foreground mt-1">
+                {state.subjects.length}
+              </div>
+              <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 mt-0.5 inline-block">
+                Active courses
+              </span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center font-bold">
+              <Layers className="w-6 h-6" />
+            </div>
+          </div>
+
+          {/* Stat 4 */}
+          <div className="glass p-5 rounded-[24px] flex items-center justify-between">
+            <div>
+              <span className="text-xs font-bold text-muted uppercase tracking-wider">Current Streak</span>
+              <div className="text-2xl sm:text-3xl font-black text-foreground mt-1 flex items-center gap-1.5">
+                {state.user.streak} <span className="text-xs text-muted font-bold">days</span>
+              </div>
+              <span className="text-[11px] font-bold text-orange-600 dark:text-orange-400 mt-0.5 inline-block">
+                Best: {state.user.longestStreak} days
+              </span>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 text-orange-500 flex items-center justify-center font-bold">
+              <Flame className="w-6 h-6 fill-orange-500" />
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Main 2-Column Dashboard Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+        >
+          {/* Left Column (2 Cols) */}
+          <div className="lg:col-span-2 flex flex-col gap-6">
+            <motion.div variants={itemVariants}>
+              <DailyTimetable />
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <WeeklySchedule />
+            </motion.div>
+          </div>
+
+          {/* Right Column (1 Col) */}
+          <div className="flex flex-col gap-6">
+            <motion.div variants={itemVariants}>
+              <StreakWidget />
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <AttendanceRing />
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <UpcomingTasks />
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Daily Inspiring Study Quotes Banner */}
+        <div className="pt-2">
+          <DailyQuoteBar />
         </div>
-      </main>
-    </div>
+      </div>
+    </PageTransition>
   );
 }

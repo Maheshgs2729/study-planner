@@ -1,26 +1,210 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================================
+   Study Planner Pro — Nur Alam Modern Project Management Theme
+   Reference: https://pin.it/1Rcqnex5A (Nur Alam Task & Project Management App)
+   ============================================================ */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border-color);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-fg);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-geist-sans), 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), 'Fira Code', monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ---------- Light Mode (Nur Alam Crisp Porcelain Canvas & Electric Violet) ---------- */
+:root {
+  --background: #f8f9fe;
+  --foreground: #111827;
+  --surface: #ffffff;
+  --surface-hover: #f3f5fd;
+  --border-color: rgba(229, 231, 245, 0.9);
+  --muted: #6b7280;
+  --primary: #5451ff;
+  --primary-fg: #ffffff;
+  --accent: #00d2ff;
+  --danger: #ff5252;
+  --success: #10b981;
 }
 
+/* ---------- Dark Mode (Nur Alam Deep Midnight Sapphire Canvas) ---------- */
+.dark {
+  --background: #0b0e1b;
+  --foreground: #f9fafb;
+  --surface: #14192b;
+  --surface-hover: #1c233d;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --muted: #9ca3af;
+  --primary: #6c69ff;
+  --primary-fg: #0b0e1b;
+  --accent: #38bdf8;
+  --danger: #ff6b6b;
+  --success: #34d399;
+}
+
+/* ---------- Base Styles ---------- */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Nur Alam Signature Card Design ---------- */
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 1.5rem; /* 24px */
+  box-shadow: 0 10px 30px -10px rgba(84, 81, 255, 0.06), 0 2px 8px -2px rgba(0, 0, 0, 0.02);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.dark .glass {
+  background: rgba(20, 25, 43, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.glass-hover:hover {
+  background: var(--surface-hover);
+  transform: translateY(-2px);
+  border-color: rgba(84, 81, 255, 0.3);
+  box-shadow: 0 18px 36px -12px rgba(84, 81, 255, 0.12), 0 4px 12px -2px rgba(84, 81, 255, 0.05);
+}
+
+.dark .glass-hover:hover {
+  background: rgba(28, 35, 61, 0.95);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(84, 81, 255, 0.15);
+}
+
+/* ---------- Nur Alam Hero Project Banner Styles ---------- */
+.hero-gradient-card {
+  background: linear-gradient(135deg, #5451ff 0%, #7656ff 50%, #4338ca 100%);
+  color: #ffffff;
+  border-radius: 1.75rem;
+  box-shadow: 0 20px 40px -15px rgba(84, 81, 255, 0.35);
+}
+
+.hero-gradient-card-secondary {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  color: #ffffff;
+  border-radius: 1.75rem;
+}
+
+/* ---------- Task Category Tag Badges ---------- */
+.tag-indigo {
+  background: rgba(84, 81, 255, 0.1);
+  color: #5451ff;
+  border: 1px solid rgba(84, 81, 255, 0.2);
+}
+.dark .tag-indigo {
+  background: rgba(84, 81, 255, 0.2);
+  color: #a5b4fc;
+  border: 1px solid rgba(84, 81, 255, 0.3);
+}
+
+.tag-coral {
+  background: rgba(255, 107, 74, 0.1);
+  color: #ff5252;
+  border: 1px solid rgba(255, 107, 74, 0.2);
+}
+.dark .tag-coral {
+  background: rgba(255, 107, 74, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(255, 107, 74, 0.3);
+}
+
+.tag-emerald {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.dark .tag-emerald {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.tag-cyan {
+  background: rgba(0, 210, 255, 0.1);
+  color: #0284c7;
+  border: 1px solid rgba(0, 210, 255, 0.2);
+}
+.dark .tag-cyan {
+  background: rgba(0, 210, 255, 0.2);
+  color: #7dd3fc;
+  border: 1px solid rgba(0, 210, 255, 0.3);
+}
+
+.tag-amber {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+.dark .tag-amber {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fde68a;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* ---------- Sticky Note Color Themes ---------- */
+.sticky-yellow {
+  background: #fef08a;
+  color: #713f12;
+  border-color: #fde047;
+}
+.sticky-pink {
+  background: #fbcfe8;
+  color: #831843;
+  border-color: #f472b6;
+}
+.sticky-mint {
+  background: #bbf7d0;
+  color: #14532d;
+  border-color: #86efac;
+}
+.sticky-blue {
+  background: #bae6fd;
+  color: #0c4a6e;
+  border-color: #7dd3fc;
+}
+.sticky-purple {
+  background: #e9d5ff;
+  color: #581c87;
+  border-color: #d8b4fe;
+}
+
+/* ---------- Scrollbars ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* ---------- Custom Selection ---------- */
+::selection {
+  background: #5451ff;
+  color: #ffffff;
 }
