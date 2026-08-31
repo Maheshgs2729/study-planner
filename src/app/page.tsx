@@ -63,45 +63,45 @@ export default function Dashboard() {
   return (
     <PageTransition>
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Nur Alam Signature Hero Project Overview Card */}
+        {/* Cosmic Solar Eclipse Signature Hero Overview Card */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="hero-gradient-card p-6 sm:p-8 rounded-[28px] relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6"
+          className="hero-gradient-card p-6 sm:p-8 rounded-[28px] relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6 border border-orange-500/30"
         >
-          {/* Subtle Ambient Shapes */}
-          <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-white/10 blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-indigo-900/40 blur-2xl pointer-events-none" />
+          {/* Glowing Solar Flare Horizon Arc */}
+          <div className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-t-full bg-gradient-to-t from-orange-600/30 via-amber-500/20 to-transparent blur-2xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-orange-500/10 blur-3xl pointer-events-none" />
 
           <div className="space-y-3 z-10">
             <div className="flex items-center gap-2">
-              <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-white/20 text-white backdrop-blur-md shadow-xs flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                Academic Dashboard • {today}
+              <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-orange-500/20 text-orange-300 border border-orange-500/30 backdrop-blur-md shadow-xs flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                Cosmic Command Center • {today}
               </span>
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white leading-tight">
-              {getGreeting()}, {state.user.name.split(' ')[0]} 👋
+              {getGreeting()}, {state.user.name.split(' ')[0]} 🚀
             </h1>
 
-            <p className="text-xs sm:text-sm font-medium text-white/85 max-w-xl leading-relaxed">
-              Track your semester milestone progress, course schedules, attendance criteria, and exam readiness.
+            <p className="text-xs sm:text-sm font-medium text-white/80 max-w-xl leading-relaxed">
+              Accelerate your study workflow with lightning-fast AI assistance, attendance tracking, and exam readiness.
             </p>
 
             {/* Micro Highlights */}
             <div className="flex flex-wrap items-center gap-3 pt-1 text-xs font-semibold text-white/90">
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/15 backdrop-blur-md">
-                <BookOpen className="w-3.5 h-3.5 text-cyan-200" />
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-black/40 border border-white/10 backdrop-blur-md">
+                <BookOpen className="w-3.5 h-3.5 text-orange-400" />
                 {todayClasses.length} lectures today
               </span>
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/15 backdrop-blur-md">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-200" />
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-black/40 border border-white/10 backdrop-blur-md">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                 {upcomingTasks.length} pending tasks
               </span>
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/15 backdrop-blur-md">
-                <Flame className="w-3.5 h-3.5 text-amber-300" />
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-black/40 border border-white/10 backdrop-blur-md">
+                <Flame className="w-3.5 h-3.5 text-amber-400" />
                 {state.user.streak} days active
               </span>
             </div>
@@ -111,11 +111,11 @@ export default function Dashboard() {
           <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-start sm:items-center gap-3 z-10 flex-shrink-0">
             <Link href="/focus">
               <motion.button
-                whileHover={{ scale: 1.04 }}
+                whileHover={{ scale: 1.04, boxShadow: '0 0 30px rgba(255, 107, 0, 0.5)' }}
                 whileTap={{ scale: 0.96 }}
-                className="px-5 py-3 rounded-2xl bg-white text-primary text-xs font-black shadow-xl hover:bg-white/95 flex items-center gap-2 transition-all"
+                className="px-5 py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-black shadow-xl shadow-orange-500/30 flex items-center gap-2 transition-all border border-orange-400/40 cursor-pointer"
               >
-                <Play className="w-4 h-4 fill-primary text-primary" />
+                <Play className="w-4 h-4 fill-white text-white" />
                 <span>Start Focus Session</span>
               </motion.button>
             </Link>
@@ -124,9 +124,9 @@ export default function Dashboard() {
               <Link href="/exams">
                 <motion.div
                   whileHover={{ scale: 1.04 }}
-                  className="px-4 py-3 rounded-2xl bg-white/15 hover:bg-white/20 backdrop-blur-md border border-white/25 text-white text-xs font-bold flex items-center gap-2 transition-colors cursor-pointer"
+                  className="px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/15 text-white text-xs font-bold flex items-center gap-2 transition-colors cursor-pointer"
                 >
-                  <GraduationCap className="w-4 h-4 text-amber-300" />
+                  <GraduationCap className="w-4 h-4 text-amber-400" />
                   <span className="truncate max-w-[150px]">Next: {upcomingExams[0].title}</span>
                   <ArrowRight className="w-3.5 h-3.5 opacity-80" />
                 </motion.div>

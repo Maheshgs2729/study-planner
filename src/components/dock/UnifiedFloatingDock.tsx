@@ -320,7 +320,7 @@ export default function UnifiedFloatingDock() {
         }, 120);
       }}
       whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
-      className="fixed bottom-5 right-5 z-40 select-none cursor-grab active:cursor-grabbing flex flex-col items-end gap-3"
+      className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 select-none cursor-grab active:cursor-grabbing flex flex-col items-end gap-3"
       aria-label="Smart Study Control Island"
     >
       {/* 1. EXPANDED PANEL (Only ONE open at any time) */}
@@ -840,8 +840,8 @@ export default function UnifiedFloatingDock() {
           onClick={() => handleDockIconClick('leo')}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black transition-all ${
             activePanel === 'leo'
-              ? 'bg-primary text-white shadow-md shadow-indigo-500/30'
-              : 'bg-primary/10 text-primary hover:bg-primary/20'
+              ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/40'
+              : 'bg-orange-500/15 text-orange-400 hover:bg-orange-500/25 border border-orange-500/20'
           }`}
           title="Leo AI Copilot"
         >

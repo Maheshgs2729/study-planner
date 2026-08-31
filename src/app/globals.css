@@ -1,190 +1,185 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Study Planner Pro — Nur Alam Modern Project Management Theme
-   Reference: https://pin.it/1Rcqnex5A (Nur Alam Task & Project Management App)
+   Study Planner Pro — Cosmic Eclipse & Solar Flare Dark Theme
+   Reference: Dark Obsidian Canvas with Radiant Solar Tangerine/Amber Eclipse Glow
    ============================================================ */
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
   --color-surface-hover: var(--surface-hover);
   --color-border: var(--border-color);
   --color-muted: var(--muted);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-fg);
-  --color-accent: var(--accent);
-  --color-danger: var(--danger);
-  --color-success: var(--success);
+  --color-primary: #ff6b00;
+  --color-primary-hover: #ff851a;
+  --color-primary-fg: #ffffff;
+  --color-solar: #ff6b00;
+  --color-corona: #ffa726;
+  --color-obsidian: #08080e;
+  --color-accent: #ffa726;
+  --color-danger: #ff453a;
+  --color-success: #30d158;
+  --color-cyan: #00d2ff;
   --font-sans: var(--font-geist-sans), 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), 'Fira Code', monospace;
 }
 
-/* ---------- Light Mode (Nur Alam Crisp Porcelain Canvas & Electric Violet) ---------- */
+/* ---------- Global Theme (Cosmic Obsidian & Solar Flare) ---------- */
 :root {
-  --background: #f8f9fe;
-  --foreground: #111827;
-  --surface: #ffffff;
-  --surface-hover: #f3f5fd;
-  --border-color: rgba(229, 231, 245, 0.9);
-  --muted: #6b7280;
-  --primary: #5451ff;
+  --background: #08080f;
+  --foreground: #f8fafc;
+  --surface: #10121d;
+  --surface-hover: #171b2e;
+  --border-color: rgba(255, 120, 30, 0.15);
+  --muted: #94a3b8;
+  --primary: #ff6b00;
   --primary-fg: #ffffff;
-  --accent: #00d2ff;
-  --danger: #ff5252;
-  --success: #10b981;
+  --accent: #ffa726;
+  --danger: #ff453a;
+  --success: #30d158;
+  --solar: #ff6b00;
 }
 
-/* ---------- Dark Mode (Nur Alam Deep Midnight Sapphire Canvas) ---------- */
 .dark {
-  --background: #0b0e1b;
-  --foreground: #f9fafb;
-  --surface: #14192b;
-  --surface-hover: #1c233d;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --muted: #9ca3af;
-  --primary: #6c69ff;
-  --primary-fg: #0b0e1b;
-  --accent: #38bdf8;
-  --danger: #ff6b6b;
+  --background: #06070b;
+  --foreground: #f8fafc;
+  --surface: #0e1019;
+  --surface-hover: #151827;
+  --border-color: rgba(255, 107, 0, 0.18);
+  --muted: #94a3b8;
+  --primary: #ff7a1a;
+  --primary-fg: #ffffff;
+  --accent: #ffb74d;
+  --danger: #ff5252;
   --success: #34d399;
+  --solar: #ff7a1a;
 }
 
-/* ---------- Base Styles ---------- */
+/* ---------- Base Body with Solar Flare Radial Ambient Background ---------- */
 body {
-  background: var(--background);
+  background: #08080f;
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 107, 0, 0.18), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 95%, rgba(139, 92, 246, 0.12), transparent 60%),
+    radial-gradient(ellipse 40% 30% at 10% 40%, rgba(255, 140, 0, 0.08), transparent 50%);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  min-height: 100vh;
 }
 
-/* ---------- Nur Alam Signature Card Design ---------- */
+/* ---------- Cosmic Glass Card Design ---------- */
 .glass {
-  background: var(--surface);
-  border: 1px solid var(--border-color);
+  background: rgba(16, 18, 29, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 107, 0, 0.14);
   border-radius: 1.5rem; /* 24px */
-  box-shadow: 0 10px 30px -10px rgba(84, 81, 255, 0.06), 0 2px 8px -2px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), 0 0 20px -8px rgba(255, 107, 0, 0.08);
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
 }
 
-.dark .glass {
-  background: rgba(20, 25, 43, 0.85);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
-
 .glass-hover:hover {
-  background: var(--surface-hover);
-  transform: translateY(-2px);
-  border-color: rgba(84, 81, 255, 0.3);
-  box-shadow: 0 18px 36px -12px rgba(84, 81, 255, 0.12), 0 4px 12px -2px rgba(84, 81, 255, 0.05);
+  background: rgba(23, 27, 46, 0.95);
+  transform: translateY(-3px);
+  border-color: rgba(255, 107, 0, 0.45);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 107, 0, 0.22);
 }
 
-.dark .glass-hover:hover {
-  background: rgba(28, 35, 61, 0.95);
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(84, 81, 255, 0.15);
-}
-
-/* ---------- Nur Alam Hero Project Banner Styles ---------- */
+/* ---------- Solar Eclipse Hero Project Banner ---------- */
 .hero-gradient-card {
-  background: linear-gradient(135deg, #5451ff 0%, #7656ff 50%, #4338ca 100%);
+  background: linear-gradient(135deg, #180d05 0%, #2e1302 35%, #4a1800 65%, #180922 100%);
+  position: relative;
   color: #ffffff;
-  border-radius: 1.75rem;
-  box-shadow: 0 20px 40px -15px rgba(84, 81, 255, 0.35);
+  border-radius: 1.75rem; /* 28px */
+  border: 1px solid rgba(255, 120, 0, 0.35);
+  box-shadow: 0 25px 60px -15px rgba(255, 107, 0, 0.25), 0 0 40px -10px rgba(255, 85, 0, 0.3) inset;
+}
+
+.hero-gradient-card::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  right: 5%;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ff6b00 0%, #ff8800 30%, #7928ca 70%, transparent 85%);
+  filter: blur(40px);
+  opacity: 0.35;
+  pointer-events: none;
 }
 
 .hero-gradient-card-secondary {
-  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+  background: linear-gradient(135deg, #151322 0%, #241938 100%);
+  border: 1px solid rgba(168, 85, 247, 0.25);
   color: #ffffff;
   border-radius: 1.75rem;
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6);
 }
 
-/* ---------- Task Category Tag Badges ---------- */
+/* ---------- Eclipse Glow Badges ---------- */
 .tag-indigo {
-  background: rgba(84, 81, 255, 0.1);
-  color: #5451ff;
-  border: 1px solid rgba(84, 81, 255, 0.2);
-}
-.dark .tag-indigo {
-  background: rgba(84, 81, 255, 0.2);
-  color: #a5b4fc;
-  border: 1px solid rgba(84, 81, 255, 0.3);
+  background: rgba(255, 107, 0, 0.12);
+  color: #ff9138;
+  border: 1px solid rgba(255, 107, 0, 0.3);
 }
 
 .tag-coral {
-  background: rgba(255, 107, 74, 0.1);
-  color: #ff5252;
-  border: 1px solid rgba(255, 107, 74, 0.2);
-}
-.dark .tag-coral {
-  background: rgba(255, 107, 74, 0.2);
-  color: #fca5a5;
-  border: 1px solid rgba(255, 107, 74, 0.3);
+  background: rgba(255, 69, 0, 0.15);
+  color: #ff6b4a;
+  border: 1px solid rgba(255, 69, 0, 0.35);
 }
 
 .tag-emerald {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.2);
-}
-.dark .tag-emerald {
-  background: rgba(16, 185, 129, 0.2);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(48, 209, 88, 0.12);
+  color: #4ade80;
+  border: 1px solid rgba(48, 209, 88, 0.3);
 }
 
 .tag-cyan {
-  background: rgba(0, 210, 255, 0.1);
-  color: #0284c7;
-  border: 1px solid rgba(0, 210, 255, 0.2);
-}
-.dark .tag-cyan {
-  background: rgba(0, 210, 255, 0.2);
-  color: #7dd3fc;
+  background: rgba(0, 210, 255, 0.12);
+  color: #38bdf8;
   border: 1px solid rgba(0, 210, 255, 0.3);
 }
 
 .tag-amber {
-  background: rgba(245, 158, 11, 0.1);
-  color: #d97706;
-  border: 1px solid rgba(245, 158, 11, 0.2);
-}
-.dark .tag-amber {
-  background: rgba(245, 158, 11, 0.2);
-  color: #fde68a;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: rgba(255, 179, 0, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(255, 179, 0, 0.35);
 }
 
 /* ---------- Sticky Note Color Themes ---------- */
 .sticky-yellow {
-  background: #fef08a;
-  color: #713f12;
-  border-color: #fde047;
+  background: #2a1f0a;
+  color: #fef08a;
+  border-color: #d97706;
 }
 .sticky-pink {
-  background: #fbcfe8;
-  color: #831843;
-  border-color: #f472b6;
+  background: #2a0e1c;
+  color: #fbcfe8;
+  border-color: #db2777;
 }
 .sticky-mint {
-  background: #bbf7d0;
-  color: #14532d;
-  border-color: #86efac;
+  background: #0a2419;
+  color: #bbf7d0;
+  border-color: #059669;
 }
 .sticky-blue {
-  background: #bae6fd;
-  color: #0c4a6e;
-  border-color: #7dd3fc;
+  background: #0a1e2e;
+  color: #bae6fd;
+  border-color: #0284c7;
 }
 .sticky-purple {
-  background: #e9d5ff;
-  color: #581c87;
-  border-color: #d8b4fe;
+  background: #1c0e2e;
+  color: #e9d5ff;
+  border-color: #9333ea;
 }
 
 /* ---------- Scrollbars ---------- */
@@ -196,15 +191,15 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
+  background: rgba(255, 107, 0, 0.3);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--muted);
+  background: #ff6b00;
 }
 
 /* ---------- Custom Selection ---------- */
 ::selection {
-  background: #5451ff;
+  background: #ff6b00;
   color: #ffffff;
 }

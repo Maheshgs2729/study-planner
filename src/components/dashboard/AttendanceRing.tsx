@@ -27,7 +27,7 @@ export default function AttendanceRing() {
     <div className="glass p-6 rounded-[26px] flex flex-col items-center">
       <div className="flex items-center justify-between w-full mb-3">
         <span className="text-xs font-bold text-muted uppercase tracking-wider">Attendance Status</span>
-        <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1 ${
+        <span suppressHydrationWarning className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1 ${
           isEligible
             ? 'tag-emerald'
             : 'tag-coral'
@@ -74,7 +74,7 @@ export default function AttendanceRing() {
       </div>
       
       <div suppressHydrationWarning className="mt-2 text-xs font-medium text-muted">
-        <span className="font-black text-foreground">{attended}</span> of {total} scheduled classes attended
+        <span suppressHydrationWarning className="font-black text-foreground">{attended}</span> of <span suppressHydrationWarning>{total}</span> scheduled classes attended
       </div>
     </div>
   );

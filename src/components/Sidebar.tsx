@@ -66,7 +66,7 @@ export default function Sidebar() {
                   whileTap={{ scale: 0.98 }}
                   className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl transition-all relative ${
                     isActive
-                      ? 'text-white font-bold shadow-md shadow-indigo-500/20 bg-primary'
+                      ? 'text-white font-bold shadow-lg shadow-orange-500/30 bg-gradient-to-r from-orange-500 to-amber-500 border border-orange-400/30'
                       : 'text-muted hover:text-foreground hover:bg-surface-hover'
                   }`}
                 >

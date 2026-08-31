@@ -186,16 +186,16 @@ export interface AppState {
   wallpaper: WallpaperConfig;
 }
 
-// ---------- Subject colors palette ----------
+// ---------- Subject colors palette (Cosmic Solar Theme) ----------
 export const SUBJECT_COLORS = [
-  '#6366f1', // indigo
-  '#8b5cf6', // violet
-  '#ec4899', // pink
-  '#f59e0b', // amber
-  '#10b981', // emerald
-  '#06b6d4', // cyan
-  '#f97316', // orange
-  '#ef4444', // red
+  '#ff6b00', // Radiant Solar Orange
+  '#ffa726', // Corona Amber Gold
+  '#a855f7', // Deep Nebula Purple
+  '#00d2ff', // Neon Cosmic Cyan
+  '#ff453a', // Solar Flare Red
+  '#30d158', // Aurora Emerald
+  '#f43f5e', // Hot Nova Pink
+  '#38bdf8', // Starlight Blue
 ] as const;
 
 // ---------- Curated Wallpaper Presets ----------

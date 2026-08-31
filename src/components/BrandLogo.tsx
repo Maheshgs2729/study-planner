@@ -34,8 +34,8 @@ export default function BrandLogo({
         className="relative flex-shrink-0 cursor-pointer"
         style={{ width: icon, height: icon }}
       >
-        {/* Ambient Glow */}
-        <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-indigo-600 via-violet-500 to-cyan-400 opacity-60 blur-md group-hover:opacity-100 transition-opacity" />
+        {/* Ambient Solar Glow */}
+        <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-orange-600 via-amber-500 to-yellow-400 opacity-70 blur-md group-hover:opacity-100 transition-opacity" />
 
         <svg
           viewBox="0 0 100 100"
@@ -46,17 +46,17 @@ export default function BrandLogo({
           <defs>
             {/* Gradients */}
             <linearGradient id="logoPrimaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#6366f1" />
-              <stop offset="50%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#06b6d4" />
+              <stop offset="0%" stopColor="#ff6b00" />
+              <stop offset="50%" stopColor="#ffa726" />
+              <stop offset="100%" stopColor="#ff4500" />
             </linearGradient>
             <linearGradient id="logoGlowGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#4f46e5" />
-              <stop offset="100%" stopColor="#38bdf8" />
+              <stop offset="0%" stopColor="#ff5500" />
+              <stop offset="100%" stopColor="#fbbf24" />
             </linearGradient>
             <linearGradient id="bookPageGrad" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-              <stop offset="100%" stopColor="#e0e7ff" stopOpacity="0.75" />
+              <stop offset="100%" stopColor="#ffedd5" stopOpacity="0.8" />
             </linearGradient>
             <filter id="logoShadow" x="-20%" y="-20%" width="140%" height="140%">
               <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#4338ca" floodOpacity="0.4" />

@@ -101,8 +101,9 @@ export default function DailyTimetable() {
                     </div>
 
                     {/* Attendance Action Buttons */}
-                    <div className="flex items-center gap-1.5 self-start sm:self-auto bg-surface dark:bg-slate-800 p-1 rounded-xl border border-border shadow-xs">
+                    <div suppressHydrationWarning className="flex items-center gap-1.5 self-start sm:self-auto bg-surface dark:bg-slate-800 p-1 rounded-xl border border-border shadow-xs">
                       <button
+                        suppressHydrationWarning
                         onClick={() => handleAttendance(entry.id, entry.subjectId, 'present')}
                         className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
                           status === 'present'
@@ -115,6 +116,7 @@ export default function DailyTimetable() {
                         <span>Present</span>
                       </button>
                       <button
+                        suppressHydrationWarning
                         onClick={() => handleAttendance(entry.id, entry.subjectId, 'absent')}
                         className={`px-2 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 ${
                           status === 'absent'
@@ -127,6 +129,7 @@ export default function DailyTimetable() {
                         <span>Absent</span>
                       </button>
                       <button
+                        suppressHydrationWarning
                         onClick={() => handleAttendance(entry.id, entry.subjectId, 'cancelled')}
                         className={`p-1.5 rounded-lg text-xs font-bold transition-all ${
                           status === 'cancelled'
