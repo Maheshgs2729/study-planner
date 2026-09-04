@@ -534,14 +534,14 @@ export default function UnifiedFloatingDock() {
                 <div className="flex items-center justify-between px-1">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[11px] font-bold text-zinc-300">
+                    <span className="text-[11px] font-bold text-foreground">
                       {state.user.spotifyLinked ? `Linked: @${state.user.spotifyUser || 'Spotify'}` : 'Spotify Web Player'}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => setShowAddPlaylistForm(!showAddPlaylistForm)}
-                      className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-[10px] font-bold border border-zinc-800 transition-colors"
+                      className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-zinc-900 hover:bg-slate-200 dark:hover:bg-zinc-800 text-foreground text-[10px] font-bold border border-border transition-colors cursor-pointer"
                     >
                       {showAddPlaylistForm ? 'Cancel' : '+ Add Playlist'}
                     </button>
@@ -550,7 +550,7 @@ export default function UnifiedFloatingDock() {
                         setActivePanel('none');
                         setIsProfileModalOpen(true);
                       }}
-                      className="text-[10px] text-zinc-500 hover:text-white font-medium underline"
+                      className="text-[10px] text-muted hover:text-foreground font-medium underline cursor-pointer"
                     >
                       Manage
                     </button>
@@ -574,27 +574,27 @@ export default function UnifiedFloatingDock() {
                       setQuickPlaylistName('');
                       setShowAddPlaylistForm(false);
                     }}
-                    className="p-3 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2"
+                    className="p-3 rounded-2xl bg-surface-hover/70 border border-border space-y-2"
                   >
-                    <div className="text-[11px] font-bold text-white">Add Custom Spotify Playlist / Album / Track</div>
+                    <div className="text-[11px] font-bold text-foreground">Add Custom Spotify Playlist / Album / Track</div>
                     <input
                       type="text"
                       value={quickPlaylistName}
                       onChange={(e) => setQuickPlaylistName(e.target.value)}
                       placeholder="Playlist Name (e.g. Deep Work)"
-                      className="w-full px-3 py-1.5 rounded-xl bg-black border border-zinc-800 text-xs text-white placeholder:text-zinc-600 outline-none focus:border-white"
+                      className="w-full px-3 py-1.5 rounded-xl bg-surface border border-border text-xs text-foreground placeholder:text-muted/60 outline-none focus:border-slate-900 dark:focus:border-white"
                     />
                     <input
                       type="text"
                       value={quickSpotifyUrl}
                       onChange={(e) => setQuickSpotifyUrl(e.target.value)}
                       placeholder="Paste Spotify Link (https://open.spotify.com/...)"
-                      className="w-full px-3 py-1.5 rounded-xl bg-black border border-zinc-800 text-xs text-white placeholder:text-zinc-600 outline-none focus:border-white"
+                      className="w-full px-3 py-1.5 rounded-xl bg-surface border border-border text-xs text-foreground placeholder:text-muted/60 outline-none focus:border-slate-900 dark:focus:border-white"
                     />
                     <button
                       type="submit"
                       disabled={!quickSpotifyUrl.trim()}
-                      className="w-full py-1.5 rounded-xl bg-white text-black font-black text-xs hover:bg-zinc-200 disabled:opacity-40 transition-all cursor-pointer"
+                      className="w-full py-1.5 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-black font-black text-xs hover:bg-slate-800 dark:hover:bg-zinc-200 disabled:opacity-40 transition-all cursor-pointer"
                     >
                       Play & Save to Profile
                     </button>
@@ -602,7 +602,7 @@ export default function UnifiedFloatingDock() {
                 )}
 
                 {/* Spotify Interactive Web Player Embed */}
-                <div className="rounded-2xl overflow-hidden bg-black shadow-inner border border-zinc-800">
+                <div className="rounded-2xl overflow-hidden bg-black shadow-inner border border-border">
                   <iframe
                     src={currentEmbed}
                     width="100%"
@@ -617,7 +617,7 @@ export default function UnifiedFloatingDock() {
                 {/* User's Custom Playlists (if any) */}
                 {state.user.customPlaylists && state.user.customPlaylists.length > 0 && (
                   <div className="space-y-1.5">
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-zinc-400 block">
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-muted block">
                       Your Custom Playlists
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -629,18 +629,18 @@ export default function UnifiedFloatingDock() {
                             onClick={() => {
                               setCustomEmbedUrl(cp.embedUri);
                             }}
-                            className={`p-2.5 rounded-xl text-left border transition-all flex items-center gap-2.5 ${
+                            className={`p-2.5 rounded-xl text-left border transition-all flex items-center gap-2.5 cursor-pointer ${
                               isSelected
-                                ? 'bg-white text-black border-white font-bold shadow-sm'
-                                : 'bg-zinc-900 border-zinc-800 hover:border-zinc-600 text-white'
+                                ? 'bg-slate-900 text-white dark:bg-white dark:text-black border-slate-900 dark:border-white font-bold shadow-xs'
+                                : 'bg-surface-hover/70 border-border hover:border-slate-300 dark:hover:border-zinc-700 text-foreground'
                             }`}
                           >
-                            <div className="w-7 h-7 rounded-lg bg-zinc-800 flex items-center justify-center text-white flex-shrink-0 text-xs font-black shadow-xs">
+                            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center flex-shrink-0 text-xs font-black shadow-2xs">
                               🎵
                             </div>
                             <div className="truncate">
                               <div className="text-xs font-bold truncate">{cp.name}</div>
-                              <div className="text-[10px] opacity-70 truncate">Custom Linked</div>
+                              <div className="text-[10px] text-muted truncate">Custom Linked</div>
                             </div>
                           </button>
                         );
@@ -651,7 +651,7 @@ export default function UnifiedFloatingDock() {
 
                 {/* Curated Study Playlists */}
                 <div className="space-y-1.5">
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-zinc-400 block">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-muted block">
                     Curated Study Playlists
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -664,18 +664,18 @@ export default function UnifiedFloatingDock() {
                             setSelectedPlaylist(p);
                             setCustomEmbedUrl(null);
                           }}
-                          className={`p-2.5 rounded-xl text-left border transition-all flex items-center gap-2.5 ${
+                          className={`p-2.5 rounded-xl text-left border transition-all flex items-center gap-2.5 cursor-pointer ${
                             isSelected
-                              ? 'bg-white text-black border-white font-bold shadow-sm'
-                              : 'bg-zinc-900 border-zinc-800 hover:border-zinc-600 text-white'
+                              ? 'bg-slate-900 text-white dark:bg-white dark:text-black border-slate-900 dark:border-white font-bold shadow-xs'
+                              : 'bg-surface-hover/70 border-border hover:border-slate-300 dark:hover:border-zinc-700 text-foreground'
                           }`}
                         >
-                          <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${p.color} flex items-center justify-center text-white flex-shrink-0 text-xs font-bold shadow-xs`}>
+                          <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${p.color} flex items-center justify-center text-white flex-shrink-0 text-xs font-bold shadow-2xs`}>
                             <Headphones className="w-3.5 h-3.5" />
                           </div>
                           <div className="truncate">
                             <div className="text-xs font-bold truncate">{p.name}</div>
-                            <div className="text-[10px] opacity-70 truncate">{p.genre}</div>
+                            <div className="text-[10px] text-muted truncate">{p.genre}</div>
                           </div>
                         </button>
                       );
@@ -945,10 +945,10 @@ export default function UnifiedFloatingDock() {
       {/* 2. SINGLE UNIFIED SLIM FLOATING CONTROL DOCK */}
       <motion.div
         whileHover={{ scale: 1.03 }}
-        className="flex items-center gap-1.5 p-1.5 rounded-full bg-zinc-950/95 backdrop-blur-2xl border border-zinc-800 shadow-2xl shadow-black transition-shadow hover:border-zinc-600"
+        className="flex items-center gap-1.5 p-1.5 rounded-full bg-surface/90 backdrop-blur-2xl border border-border shadow-xl transition-shadow hover:border-slate-300 dark:hover:border-zinc-700"
       >
         {/* Drag Grab Handle */}
-        <div className="pl-2 pr-1 text-zinc-500 opacity-60 hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing">
+        <div className="pl-2 pr-1 text-muted opacity-60 hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing">
           <GripHorizontal className="w-3.5 h-3.5" />
         </div>
 
@@ -956,10 +956,10 @@ export default function UnifiedFloatingDock() {
         <motion.button
           whileTap={{ scale: 0.92 }}
           onClick={() => handleDockIconClick('leo')}
-          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black transition-all ${
+          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black transition-all cursor-pointer ${
             activePanel === 'leo'
-              ? 'bg-white text-black shadow-md shadow-white/10'
-              : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-md'
+              : 'bg-surface-hover text-foreground hover:bg-slate-200 dark:hover:bg-zinc-800 border border-border'
           }`}
           title="Leo AI Copilot"
         >
@@ -971,10 +971,10 @@ export default function UnifiedFloatingDock() {
         <motion.button
           whileTap={{ scale: 0.92 }}
           onClick={() => handleDockIconClick('music')}
-          className={`p-2 rounded-full transition-all ${
+          className={`p-2 rounded-full transition-all cursor-pointer ${
             activePanel === 'music'
-              ? 'bg-white text-black shadow-md'
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-md'
+              : 'text-muted hover:text-foreground hover:bg-surface-hover'
           }`}
           title="Study Music & Ambience"
         >
@@ -985,10 +985,10 @@ export default function UnifiedFloatingDock() {
         <motion.button
           whileTap={{ scale: 0.92 }}
           onClick={() => handleDockIconClick('stickies')}
-          className={`p-2 rounded-full transition-all ${
+          className={`p-2 rounded-full transition-all cursor-pointer ${
             activePanel === 'stickies'
-              ? 'bg-white text-black shadow-md'
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-md'
+              : 'text-muted hover:text-foreground hover:bg-surface-hover'
           }`}
           title="Sticky Scratchpad"
         >
@@ -999,10 +999,10 @@ export default function UnifiedFloatingDock() {
         <motion.button
           whileTap={{ scale: 0.92 }}
           onClick={() => handleDockIconClick('actions')}
-          className={`p-2 rounded-full transition-all ${
+          className={`p-2 rounded-full transition-all cursor-pointer ${
             activePanel === 'actions'
-              ? 'bg-white text-black shadow-md rotate-45'
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-md rotate-45'
+              : 'text-muted hover:text-foreground hover:bg-surface-hover'
           }`}
           title="Quick Actions (+)"
         >

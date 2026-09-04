@@ -36,32 +36,32 @@ export default function BrandLogo({
       >
         <svg
           viewBox="0 0 100 100"
-          className="relative w-full h-full drop-shadow-md"
+          className="relative w-full h-full drop-shadow-sm"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Background Shield / Rounded Squircle */}
+          {/* Background Squircle */}
           <rect
             x="4"
             y="4"
             width="92"
             height="92"
             rx="26"
-            fill="#ffffff"
+            className="fill-slate-900 dark:fill-white"
           />
 
           {/* Minimalist Graduation Cap & Book Emblem */}
           <path
             d="M50 26L22 40L50 54L78 40L50 26Z"
-            fill="#000000"
+            className="fill-white dark:fill-black"
           />
           <path
             d="M32 46.5V62C32 68 40 73 50 73C60 73 68 68 68 62V46.5L50 55.5L32 46.5Z"
-            fill="#000000"
+            className="fill-white dark:fill-black"
           />
           <path
             d="M78 40V58"
-            stroke="#000000"
+            className="stroke-white dark:stroke-black"
             strokeWidth="3.5"
             strokeLinecap="round"
           />
@@ -72,14 +72,14 @@ export default function BrandLogo({
       {showText && (
         <div className="flex flex-col leading-none">
           <div className="flex items-center gap-1.5">
-            <span className={`font-black tracking-tight text-white ${text}`}>
+            <span className={`font-black tracking-tight text-foreground ${text}`}>
               Study Planner
             </span>
-            <span className="px-1.5 py-0.5 rounded-md bg-white text-black font-black text-[9px] uppercase tracking-wider">
+            <span className="px-1.5 py-0.5 rounded-md bg-slate-900 dark:bg-white text-white dark:text-black font-black text-[9px] uppercase tracking-wider">
               PRO
             </span>
           </div>
-          <span className={`text-zinc-500 font-semibold tracking-wider uppercase mt-0.5 ${sub}`}>
+          <span className={`text-muted font-semibold tracking-wider uppercase mt-0.5 ${sub}`}>
             Academic Manager
           </span>
         </div>

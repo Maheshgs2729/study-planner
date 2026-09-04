@@ -40,7 +40,7 @@ export default function Sidebar() {
         initial={false}
         animate={{ width: collapsed ? 80 : 260 }}
         transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-        className="hidden md:flex flex-col fixed left-0 top-0 h-full z-40 bg-surface border-r border-border shadow-xs transition-colors"
+        className="hidden md:flex flex-col fixed left-0 top-0 h-full z-40 bg-surface/90 backdrop-blur-xl border-r border-border shadow-xs transition-colors"
       >
         {/* Brand Logo Header */}
         <div className="flex items-center px-5 h-16 border-b border-border overflow-hidden">
@@ -66,11 +66,15 @@ export default function Sidebar() {
                   whileTap={{ scale: 0.98 }}
                   className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl transition-all relative ${
                     isActive
-                      ? 'text-black font-black shadow-lg bg-white border border-white'
-                      : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+                      ? 'text-white bg-slate-900 dark:bg-white dark:text-black font-extrabold shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-900'
                   }`}
                 >
-                  <item.icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-black stroke-[2.5]' : 'text-zinc-400'}`} />
+                  <item.icon
+                    className={`w-5 h-5 flex-shrink-0 ${
+                      isActive ? 'stroke-[2.5]' : 'opacity-70'
+                    }`}
+                  />
                   {!collapsed && (
                     <span className="whitespace-nowrap text-xs font-bold tracking-tight">
                       {item.label}
@@ -94,8 +98,8 @@ export default function Sidebar() {
         </div>
       </motion.aside>
 
-      {/* Mobile Bottom Tab Bar (Pure Monochrome Style) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-zinc-800">
+      {/* Mobile Bottom Tab Bar */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/95 backdrop-blur-xl border-t border-border shadow-lg">
         <div className="flex items-center justify-around h-16 px-2 overflow-x-auto">
           {navItems.slice(0, 5).map((item) => {
             const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
@@ -104,14 +108,16 @@ export default function Sidebar() {
                 <motion.div
                   whileTap={{ scale: 0.9 }}
                   className={`flex flex-col items-center gap-1 py-1 ${
-                    isActive ? 'text-white font-bold' : 'text-zinc-500'
+                    isActive
+                      ? 'text-slate-950 dark:text-white font-extrabold'
+                      : 'text-slate-400 dark:text-zinc-500'
                   }`}
                 >
                   <div className="relative">
                     {isActive && (
                       <motion.div
                         layoutId="mobile-tab-active"
-                        className="absolute -inset-1.5 rounded-xl bg-white/10"
+                        className="absolute -inset-1.5 rounded-xl bg-slate-100 dark:bg-white/10"
                         transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                       />
                     )}

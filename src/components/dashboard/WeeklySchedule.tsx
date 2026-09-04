@@ -37,15 +37,15 @@ export default function WeeklySchedule() {
 
   return (
     <>
-      <div className="glass p-6 rounded-[26px] overflow-hidden border border-zinc-800 bg-zinc-950">
+      <div className="glass p-6 rounded-[26px] overflow-hidden">
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center font-bold border border-zinc-800">
+            <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-zinc-900 text-foreground flex items-center justify-center font-bold border border-border">
               <Calendar className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-extrabold text-white leading-tight">Weekly Course Distribution</h2>
-              <span className="text-[11px] text-zinc-400 font-medium">Click any day to view or edit lectures</span>
+              <h2 className="text-base font-extrabold text-foreground leading-tight">Weekly Course Distribution</h2>
+              <span className="text-[11px] text-muted font-medium">Click any day to view or edit lectures</span>
             </div>
           </div>
           <button
@@ -53,7 +53,7 @@ export default function WeeklySchedule() {
               setModalDay('monday');
               setIsModalOpen(true);
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs border border-zinc-800 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-foreground font-bold text-xs border border-border transition-colors cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Customize</span>
@@ -68,12 +68,12 @@ export default function WeeklySchedule() {
               onClick={() => openDayModal(dayData.key)}
               className={`flex-1 min-w-[100px] rounded-[20px] p-3 cursor-pointer hover:scale-[1.02] transition-all border ${
                 dayData.isToday 
-                  ? 'bg-zinc-900 border-white ring-1 ring-white/20 shadow-xs' 
-                  : 'bg-zinc-950 border-zinc-800 hover:border-zinc-700'
+                  ? 'bg-slate-900 text-white dark:bg-zinc-900 dark:text-white border-slate-900 dark:border-white ring-2 ring-slate-900/10 dark:ring-white/20 shadow-md' 
+                  : 'bg-surface-hover/60 border-border hover:border-slate-300 dark:hover:border-zinc-700'
               }`}
             >
               <div className={`text-xs font-black mb-3 text-center flex items-center justify-center gap-1 uppercase tracking-wider ${
-                dayData.isToday ? 'text-white' : 'text-zinc-500'
+                dayData.isToday ? 'text-white' : 'text-muted'
               }`}>
                 <span>{dayData.day.substring(0, 3)}</span>
                 {dayData.isToday && <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />}
@@ -90,19 +90,23 @@ export default function WeeklySchedule() {
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.03 + j * 0.03 }}
-                      className="p-2 rounded-xl text-xs bg-zinc-900 border border-zinc-800 border-l-2 border-l-white shadow-xs"
+                      className={`p-2 rounded-xl text-xs border shadow-2xs ${
+                        dayData.isToday 
+                          ? 'bg-slate-800/90 border-slate-700 text-white border-l-2 border-l-white' 
+                          : 'bg-surface border-border text-foreground border-l-2 border-l-slate-900 dark:border-l-white'
+                      }`}
                     >
-                      <div className="font-bold text-white truncate" title={subject.name}>
+                      <div className="font-bold truncate" title={subject.name}>
                         {subject.name.substring(0, 3).toUpperCase()}
                       </div>
-                      <div className="text-zinc-400 text-[10px] font-semibold mt-0.5">
+                      <div className={`text-[10px] font-semibold mt-0.5 ${dayData.isToday ? 'text-slate-300' : 'text-muted'}`}>
                         {entry.startTime}
                       </div>
                     </motion.div>
                   );
                 })}
                 {dayData.entries.length === 0 && (
-                  <div className="text-center text-[10px] text-zinc-600 py-4 font-semibold">
+                  <div className={`text-center text-[10px] py-4 font-semibold ${dayData.isToday ? 'text-slate-400' : 'text-muted/60'}`}>
                     Free day
                   </div>
                 )}

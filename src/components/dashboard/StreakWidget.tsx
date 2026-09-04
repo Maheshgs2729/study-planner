@@ -10,21 +10,21 @@ export default function StreakWidget() {
   const longest = state.user.longestStreak;
 
   return (
-    <div className="glass p-6 rounded-[26px] relative overflow-hidden group border border-zinc-800 bg-zinc-950">
+    <div className="glass p-6 rounded-[26px] relative overflow-hidden group">
       {/* Accent top stripe */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-white" />
+      <div className="absolute top-0 left-0 right-0 h-1 bg-amber-500" />
       
       <div className="flex items-center justify-between">
         <div>
-          <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider block mb-1">
+          <span className="text-xs font-bold text-muted uppercase tracking-wider block mb-1">
             Active Study Streak
           </span>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-black text-white tracking-tight">{streak}</span>
-            <span className="text-xs font-bold text-zinc-400">days running</span>
+            <span className="text-4xl font-black text-foreground tracking-tight">{streak}</span>
+            <span className="text-xs font-bold text-muted">days running</span>
           </div>
-          <p className="text-[11px] text-zinc-400 font-medium mt-1">
-            Personal record: <span className="font-bold text-white">{longest} days</span>
+          <p className="text-[11px] text-muted font-medium mt-1">
+            Personal record: <span className="font-bold text-foreground">{longest} days</span>
           </p>
         </div>
         
@@ -37,9 +37,9 @@ export default function StreakWidget() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="w-14 h-14 bg-zinc-900 rounded-2xl text-white flex items-center justify-center border border-zinc-700 shadow-sm"
+          className="w-14 h-14 bg-amber-50 dark:bg-zinc-900 rounded-2xl text-amber-500 flex items-center justify-center border border-amber-100 dark:border-zinc-800 shadow-xs"
         >
-          <Flame className="w-8 h-8 fill-white text-white" />
+          <Flame className="w-8 h-8 fill-amber-500" />
         </motion.div>
       </div>
     </div>

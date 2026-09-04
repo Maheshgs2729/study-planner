@@ -63,44 +63,44 @@ export default function Dashboard() {
   return (
     <PageTransition>
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Pure Monochrome Black & White Signature Hero Overview Card */}
+        {/* Apple / Notion Signature Hero Overview Card */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="hero-gradient-card p-6 sm:p-8 rounded-[28px] relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6 border border-zinc-800 bg-zinc-950"
+          className="hero-gradient-card p-6 sm:p-8 rounded-[28px] relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6"
         >
-          {/* Subtle Ambient Monochrome Vignette */}
-          <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none" />
+          {/* Subtle Ambient Vignette */}
+          <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-slate-200/40 dark:bg-white/5 blur-3xl pointer-events-none" />
 
           <div className="space-y-3 z-10">
             <div className="flex items-center gap-2">
-              <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-zinc-900 text-white border border-zinc-700 backdrop-blur-md shadow-xs flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-white" />
+              <span className="px-3.5 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-slate-100 dark:bg-zinc-900 text-slate-900 dark:text-white border border-slate-200 dark:border-zinc-700 backdrop-blur-md shadow-xs flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
                 Study Planner Pro • {today}
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white leading-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-foreground leading-tight">
               {getGreeting()}, {state.user.name.split(' ')[0]}
             </h1>
 
-            <p className="text-xs sm:text-sm font-medium text-zinc-400 max-w-xl leading-relaxed">
-              Track course timetables, attendance thresholds, assignments, and exam schedules with zero distractions.
+            <p className="text-xs sm:text-sm font-medium text-muted max-w-xl leading-relaxed">
+              Track course timetables, attendance thresholds, assignments, and exam schedules seamlessly.
             </p>
 
             {/* Micro Highlights */}
-            <div className="flex flex-wrap items-center gap-3 pt-1 text-xs font-semibold text-white">
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-zinc-900/80 border border-zinc-800 backdrop-blur-md">
-                <BookOpen className="w-3.5 h-3.5 text-white" />
+            <div className="flex flex-wrap items-center gap-3 pt-1 text-xs font-semibold text-foreground">
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface/80 border border-border backdrop-blur-md shadow-xs">
+                <BookOpen className="w-3.5 h-3.5 text-slate-700 dark:text-zinc-300" />
                 {todayClasses.length} lectures today
               </span>
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-zinc-900/80 border border-zinc-800 backdrop-blur-md">
-                <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface/80 border border-border backdrop-blur-md shadow-xs">
+                <CheckCircle2 className="w-3.5 h-3.5 text-slate-700 dark:text-zinc-300" />
                 {upcomingTasks.length} pending tasks
               </span>
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-zinc-900/80 border border-zinc-800 backdrop-blur-md">
-                <Flame className="w-3.5 h-3.5 text-white" />
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface/80 border border-border backdrop-blur-md shadow-xs">
+                <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                 {state.user.streak} days active
               </span>
             </div>
@@ -110,11 +110,11 @@ export default function Dashboard() {
           <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row items-start sm:items-center gap-3 z-10 flex-shrink-0">
             <Link href="/focus">
               <motion.button
-                whileHover={{ scale: 1.04, boxShadow: '0 0 25px rgba(255, 255, 255, 0.2)' }}
+                whileHover={{ scale: 1.04, boxShadow: '0 8px 25px -4px rgba(0, 0, 0, 0.15)' }}
                 whileTap={{ scale: 0.96 }}
-                className="px-5 py-3 rounded-2xl bg-white text-black text-xs font-black shadow-xl flex items-center gap-2 transition-all hover:bg-zinc-200 cursor-pointer"
+                className="px-5 py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-black text-xs font-black shadow-lg flex items-center gap-2 transition-all hover:bg-slate-800 dark:hover:bg-zinc-200 cursor-pointer"
               >
-                <Play className="w-4 h-4 fill-black text-black" />
+                <Play className="w-4 h-4 fill-current" />
                 <span>Start Focus Session</span>
               </motion.button>
             </Link>
@@ -123,80 +123,82 @@ export default function Dashboard() {
               <Link href="/exams">
                 <motion.div
                   whileHover={{ scale: 1.04 }}
-                  className="px-4 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 backdrop-blur-md border border-zinc-700 text-white text-xs font-bold flex items-center gap-2 transition-colors cursor-pointer"
+                  className="px-4 py-3 rounded-2xl bg-surface hover:bg-surface-hover backdrop-blur-md border border-border text-foreground text-xs font-bold flex items-center gap-2 transition-colors cursor-pointer shadow-xs"
                 >
-                  <GraduationCap className="w-4 h-4 text-white" />
+                  <GraduationCap className="w-4 h-4 opacity-80" />
                   <span className="truncate max-w-[150px]">Next: {upcomingExams[0].title}</span>
-                  <ArrowRight className="w-3.5 h-3.5 opacity-80" />
+                  <ArrowRight className="w-3.5 h-3.5 opacity-60" />
                 </motion.div>
               </Link>
             )}
           </div>
         </motion.div>
 
-        {/* Stat Summary Metrics (Pure Monochrome 4-Card Grid) */}
+        {/* Stat Summary Metrics (Clean 4-Card Responsive Grid) */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Stat 1 */}
-          <div className="glass p-5 rounded-[24px] flex items-center justify-between border border-zinc-800 bg-zinc-950">
+          <div className="glass p-5 rounded-[24px] flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Overall Attendance</span>
-              <div suppressHydrationWarning className="text-2xl sm:text-3xl font-black text-white mt-1">
+              <span className="text-xs font-bold text-muted uppercase tracking-wider">Overall Attendance</span>
+              <div suppressHydrationWarning className="text-2xl sm:text-3xl font-black text-foreground mt-1">
                 {overallAttendance.percentage.toFixed(0)}%
               </div>
-              <span suppressHydrationWarning className="text-[11px] font-bold mt-0.5 inline-block text-zinc-300">
+              <span suppressHydrationWarning className={`text-[11px] font-bold mt-0.5 inline-block ${
+                overallAttendance.percentage >= 75 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+              }`}>
                 {overallAttendance.percentage >= 75 ? '✓ Above criteria (75%)' : '⚠ Below 75%'}
               </span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 text-white flex items-center justify-center font-bold">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-zinc-900 border border-emerald-100 dark:border-zinc-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
               <TrendingUp className="w-6 h-6" />
             </div>
           </div>
 
           {/* Stat 2 */}
-          <div className="glass p-5 rounded-[24px] flex items-center justify-between border border-zinc-800 bg-zinc-950">
+          <div className="glass p-5 rounded-[24px] flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Today&apos;s Focus</span>
-              <div className="text-2xl sm:text-3xl font-black text-white mt-1">
-                {todayStudyMins} <span className="text-xs text-zinc-500 font-bold">mins</span>
+              <span className="text-xs font-bold text-muted uppercase tracking-wider">Today&apos;s Focus</span>
+              <div className="text-2xl sm:text-3xl font-black text-foreground mt-1">
+                {todayStudyMins} <span className="text-xs text-muted font-bold">mins</span>
               </div>
-              <span className="text-[11px] font-bold text-zinc-400 mt-0.5 inline-block">
+              <span className="text-[11px] font-bold text-muted mt-0.5 inline-block">
                 Deep work logged
               </span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 text-white flex items-center justify-center font-bold">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-zinc-900 border border-indigo-100 dark:border-zinc-800 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
               <Clock className="w-6 h-6" />
             </div>
           </div>
 
           {/* Stat 3 */}
-          <div className="glass p-5 rounded-[24px] flex items-center justify-between border border-zinc-800 bg-zinc-950">
+          <div className="glass p-5 rounded-[24px] flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Subjects Enrolled</span>
-              <div className="text-2xl sm:text-3xl font-black text-white mt-1">
+              <span className="text-xs font-bold text-muted uppercase tracking-wider">Subjects Enrolled</span>
+              <div className="text-2xl sm:text-3xl font-black text-foreground mt-1">
                 {state.subjects.length}
               </div>
-              <span className="text-[11px] font-bold text-zinc-400 mt-0.5 inline-block">
+              <span className="text-[11px] font-bold text-muted mt-0.5 inline-block">
                 Active courses
               </span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 text-white flex items-center justify-center font-bold">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-zinc-900 border border-blue-100 dark:border-zinc-800 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
               <Layers className="w-6 h-6" />
             </div>
           </div>
 
           {/* Stat 4 */}
-          <div className="glass p-5 rounded-[24px] flex items-center justify-between border border-zinc-800 bg-zinc-950">
+          <div className="glass p-5 rounded-[24px] flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Current Streak</span>
-              <div className="text-2xl sm:text-3xl font-black text-white mt-1 flex items-center gap-1.5">
-                {state.user.streak} <span className="text-xs text-zinc-500 font-bold">days</span>
+              <span className="text-xs font-bold text-muted uppercase tracking-wider">Current Streak</span>
+              <div className="text-2xl sm:text-3xl font-black text-foreground mt-1 flex items-center gap-1.5">
+                {state.user.streak} <span className="text-xs text-muted font-bold">days</span>
               </div>
-              <span className="text-[11px] font-bold text-zinc-400 mt-0.5 inline-block">
+              <span className="text-[11px] font-bold text-muted mt-0.5 inline-block">
                 Personal record: {state.user.longestStreak}d
               </span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 text-white flex items-center justify-center font-bold">
-              <Flame className="w-6 h-6 fill-white text-white" />
+            <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-zinc-900 border border-amber-100 dark:border-zinc-800 text-amber-500 flex items-center justify-center font-bold">
+              <Flame className="w-6 h-6 fill-amber-500" />
             </div>
           </div>
         </div>
