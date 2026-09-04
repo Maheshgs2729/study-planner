@@ -60,9 +60,19 @@ const PRESET_PROMPTS = [
 
 export default function UnifiedFloatingDock() {
   const pathname = usePathname();
-  const { state, addStickyNote, updateStickyNote, deleteStickyNote } = useApp();
+  const {
+    state,
+    addStickyNote,
+    updateStickyNote,
+    deleteStickyNote,
+    addSpotifyPlaylist,
+    setIsProfileModalOpen,
+  } = useApp();
 
   const [activePanel, setActivePanel] = useState<ActivePanel>('none');
+  const [quickSpotifyUrl, setQuickSpotifyUrl] = useState('');
+  const [quickPlaylistName, setQuickPlaylistName] = useState('');
+  const [showAddPlaylistForm, setShowAddPlaylistForm] = useState(false);
   const isDraggingRef = useRef(false);
 
   // Auto-close open panel on page navigation so inner tasks stay completely clean
@@ -520,7 +530,79 @@ export default function UnifiedFloatingDock() {
             {/* Tab 1: Spotify */}
             {musicTab === 'spotify' ? (
               <div className="p-4 space-y-3.5 overflow-y-auto custom-scrollbar">
-                <div className="rounded-2xl overflow-hidden bg-black shadow-inner border border-border">
+                {/* Spotify Account Status & Add Button Header */}
+                <div className="flex items-center justify-between px-1">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[11px] font-bold text-zinc-300">
+                      {state.user.spotifyLinked ? `Linked: @${state.user.spotifyUser || 'Spotify'}` : 'Spotify Web Player'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => setShowAddPlaylistForm(!showAddPlaylistForm)}
+                      className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white text-[10px] font-bold border border-zinc-800 transition-colors"
+                    >
+                      {showAddPlaylistForm ? 'Cancel' : '+ Add Playlist'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActivePanel('none');
+                        setIsProfileModalOpen(true);
+                      }}
+                      className="text-[10px] text-zinc-500 hover:text-white font-medium underline"
+                    >
+                      Manage
+                    </button>
+                  </div>
+                </div>
+
+                {/* Quick Add Playlist Form */}
+                {showAddPlaylistForm && (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (!quickSpotifyUrl.trim()) return;
+                      addSpotifyPlaylist(quickPlaylistName.trim() || 'My Study Playlist', quickSpotifyUrl.trim());
+                      let embed = quickSpotifyUrl.trim();
+                      if (embed.includes('open.spotify.com') && !embed.includes('/embed/')) {
+                        embed = embed.replace('open.spotify.com/', 'open.spotify.com/embed/');
+                      }
+                      if (!embed.includes('?')) embed += '?utm_source=generator&theme=0';
+                      setCustomEmbedUrl(embed);
+                      setQuickSpotifyUrl('');
+                      setQuickPlaylistName('');
+                      setShowAddPlaylistForm(false);
+                    }}
+                    className="p-3 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2"
+                  >
+                    <div className="text-[11px] font-bold text-white">Add Custom Spotify Playlist / Album / Track</div>
+                    <input
+                      type="text"
+                      value={quickPlaylistName}
+                      onChange={(e) => setQuickPlaylistName(e.target.value)}
+                      placeholder="Playlist Name (e.g. Deep Work)"
+                      className="w-full px-3 py-1.5 rounded-xl bg-black border border-zinc-800 text-xs text-white placeholder:text-zinc-600 outline-none focus:border-white"
+                    />
+                    <input
+                      type="text"
+                      value={quickSpotifyUrl}
+                      onChange={(e) => setQuickSpotifyUrl(e.target.value)}
+                      placeholder="Paste Spotify Link (https://open.spotify.com/...)"
+                      className="w-full px-3 py-1.5 rounded-xl bg-black border border-zinc-800 text-xs text-white placeholder:text-zinc-600 outline-none focus:border-white"
+                    />
+                    <button
+                      type="submit"
+                      disabled={!quickSpotifyUrl.trim()}
+                      className="w-full py-1.5 rounded-xl bg-white text-black font-black text-xs hover:bg-zinc-200 disabled:opacity-40 transition-all cursor-pointer"
+                    >
+                      Play & Save to Profile
+                    </button>
+                  </form>
+                )}
+
+                {/* Spotify Interactive Web Player Embed */}
+                <div className="rounded-2xl overflow-hidden bg-black shadow-inner border border-zinc-800">
                   <iframe
                     src={currentEmbed}
                     width="100%"
@@ -532,9 +614,45 @@ export default function UnifiedFloatingDock() {
                   />
                 </div>
 
+                {/* User's Custom Playlists (if any) */}
+                {state.user.customPlaylists && state.user.customPlaylists.length > 0 && (
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-zinc-400 block">
+                      Your Custom Playlists
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {state.user.customPlaylists.map((cp) => {
+                        const isSelected = customEmbedUrl === cp.embedUri;
+                        return (
+                          <button
+                            key={cp.id}
+                            onClick={() => {
+                              setCustomEmbedUrl(cp.embedUri);
+                            }}
+                            className={`p-2.5 rounded-xl text-left border transition-all flex items-center gap-2.5 ${
+                              isSelected
+                                ? 'bg-white text-black border-white font-bold shadow-sm'
+                                : 'bg-zinc-900 border-zinc-800 hover:border-zinc-600 text-white'
+                            }`}
+                          >
+                            <div className="w-7 h-7 rounded-lg bg-zinc-800 flex items-center justify-center text-white flex-shrink-0 text-xs font-black shadow-xs">
+                              🎵
+                            </div>
+                            <div className="truncate">
+                              <div className="text-xs font-bold truncate">{cp.name}</div>
+                              <div className="text-[10px] opacity-70 truncate">Custom Linked</div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Curated Study Playlists */}
                 <div className="space-y-1.5">
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-muted block">
-                    Curated Playlists
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-zinc-400 block">
+                    Curated Study Playlists
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {PRESET_PLAYLISTS.map((p) => {
@@ -548,8 +666,8 @@ export default function UnifiedFloatingDock() {
                           }}
                           className={`p-2.5 rounded-xl text-left border transition-all flex items-center gap-2.5 ${
                             isSelected
-                              ? 'bg-primary/10 border-primary shadow-xs text-primary'
-                              : 'bg-surface-hover border-border hover:border-primary/30 text-foreground'
+                              ? 'bg-white text-black border-white font-bold shadow-sm'
+                              : 'bg-zinc-900 border-zinc-800 hover:border-zinc-600 text-white'
                           }`}
                         >
                           <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${p.color} flex items-center justify-center text-white flex-shrink-0 text-xs font-bold shadow-xs`}>
@@ -557,7 +675,7 @@ export default function UnifiedFloatingDock() {
                           </div>
                           <div className="truncate">
                             <div className="text-xs font-bold truncate">{p.name}</div>
-                            <div className="text-[10px] text-muted truncate">{p.genre}</div>
+                            <div className="text-[10px] opacity-70 truncate">{p.genre}</div>
                           </div>
                         </button>
                       );
@@ -827,10 +945,10 @@ export default function UnifiedFloatingDock() {
       {/* 2. SINGLE UNIFIED SLIM FLOATING CONTROL DOCK */}
       <motion.div
         whileHover={{ scale: 1.03 }}
-        className="flex items-center gap-1.5 p-1.5 rounded-full bg-surface/95 backdrop-blur-2xl border border-border shadow-xl shadow-black/10 transition-shadow hover:shadow-2xl hover:border-primary/40"
+        className="flex items-center gap-1.5 p-1.5 rounded-full bg-zinc-950/95 backdrop-blur-2xl border border-zinc-800 shadow-2xl shadow-black transition-shadow hover:border-zinc-600"
       >
         {/* Drag Grab Handle */}
-        <div className="pl-2 pr-1 text-muted opacity-50 hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing">
+        <div className="pl-2 pr-1 text-zinc-500 opacity-60 hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing">
           <GripHorizontal className="w-3.5 h-3.5" />
         </div>
 
@@ -838,10 +956,10 @@ export default function UnifiedFloatingDock() {
         <motion.button
           whileTap={{ scale: 0.92 }}
           onClick={() => handleDockIconClick('leo')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black transition-all ${
+          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black transition-all ${
             activePanel === 'leo'
-              ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/40'
-              : 'bg-orange-500/15 text-orange-400 hover:bg-orange-500/25 border border-orange-500/20'
+              ? 'bg-white text-black shadow-md shadow-white/10'
+              : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800'
           }`}
           title="Leo AI Copilot"
         >
@@ -855,10 +973,8 @@ export default function UnifiedFloatingDock() {
           onClick={() => handleDockIconClick('music')}
           className={`p-2 rounded-full transition-all ${
             activePanel === 'music'
-              ? 'bg-emerald-600 text-white shadow-md'
-              : isAmbientMasterPlaying
-              ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-              : 'text-muted hover:text-foreground hover:bg-surface-hover'
+              ? 'bg-white text-black shadow-md'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
           }`}
           title="Study Music & Ambience"
         >
@@ -871,8 +987,8 @@ export default function UnifiedFloatingDock() {
           onClick={() => handleDockIconClick('stickies')}
           className={`p-2 rounded-full transition-all ${
             activePanel === 'stickies'
-              ? 'bg-amber-500 text-amber-950 shadow-md'
-              : 'text-muted hover:text-foreground hover:bg-surface-hover'
+              ? 'bg-white text-black shadow-md'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
           }`}
           title="Sticky Scratchpad"
         >
@@ -885,8 +1001,8 @@ export default function UnifiedFloatingDock() {
           onClick={() => handleDockIconClick('actions')}
           className={`p-2 rounded-full transition-all ${
             activePanel === 'actions'
-              ? 'bg-primary text-white shadow-md rotate-45'
-              : 'text-muted hover:text-foreground hover:bg-surface-hover'
+              ? 'bg-white text-black shadow-md rotate-45'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
           }`}
           title="Quick Actions (+)"
         >

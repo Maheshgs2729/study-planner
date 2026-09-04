@@ -43,12 +43,11 @@ export default function TopBar() {
             <motion.div
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/25 shadow-xs"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-700 shadow-xs"
             >
               <motion.div
                 animate={{
-                  scale: [1, 1.2, 1],
-                  rotate: [0, -5, 5, 0],
+                  scale: [1, 1.15, 1],
                 }}
                 transition={{
                   duration: 2,
@@ -56,9 +55,9 @@ export default function TopBar() {
                   repeatType: 'loop',
                 }}
               >
-                <Flame className="w-4 h-4 text-orange-500 fill-orange-500" />
+                <Flame className="w-4 h-4 text-white fill-white" />
               </motion.div>
-              <span className="text-xs font-bold text-orange-600 dark:text-orange-400">
+              <span className="text-xs font-black text-white">
                 {state.user.streak}d Streak
               </span>
             </motion.div>
@@ -68,10 +67,10 @@ export default function TopBar() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.92 }}
               onClick={() => setIsWallpaperModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 text-xs font-bold transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700 text-xs font-bold transition-all"
               title="Change Ambience Wallpaper"
             >
-              <ImageIcon className="w-3.5 h-3.5" />
+              <ImageIcon className="w-3.5 h-3.5 text-white" />
               <span className="hidden sm:inline">Theme</span>
             </motion.button>
 
@@ -96,23 +95,48 @@ export default function TopBar() {
               </motion.div>
             </motion.button>
 
-            {/* User Profile Avatar Pill */}
-            <div className="flex items-center gap-2 pl-1 border-l border-border/60">
-              <div className="relative">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 via-primary to-violet-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
-                  {state.user.name.charAt(0)}
+            {/* User Profile Avatar Pill / Sign In Trigger */}
+            {state.user.isAuthenticated ? (
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => setIsProfileModalOpen(true)}
+                className="flex items-center gap-2.5 pl-2 pr-3 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-left transition-all cursor-pointer"
+                title="Edit Profile & Settings"
+              >
+                <div className="relative">
+                  {state.user.avatar ? (
+                    <img
+                      src={state.user.avatar}
+                      alt={state.user.name}
+                      className="w-8 h-8 rounded-full object-cover border border-zinc-700 shadow-sm"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-black text-xs shadow-sm">
+                      {state.user.name.charAt(0)}
+                    </div>
+                  )}
+                  <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-white border border-black" />
                 </div>
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-surface" />
-              </div>
-              <div className="hidden lg:flex flex-col text-left">
-                <span className="text-xs font-bold text-foreground leading-none">
-                  {state.user.name}
-                </span>
-                <span className="text-[10px] text-muted mt-0.5 font-medium">
-                  {state.user.email}
-                </span>
-              </div>
-            </div>
+                <div className="hidden lg:flex flex-col">
+                  <span className="text-xs font-black text-white leading-none">
+                    {state.user.name}
+                  </span>
+                  <span className="text-[9px] text-zinc-400 mt-0.5 font-medium truncate max-w-[110px]">
+                    {state.user.university || state.user.email}
+                  </span>
+                </div>
+              </motion.button>
+            ) : (
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => setIsAuthModalOpen(true)}
+                className="px-4 py-1.5 rounded-full bg-white text-black font-black text-xs hover:bg-zinc-200 transition-all shadow-md cursor-pointer"
+              >
+                Sign In
+              </motion.button>
+            )}
           </div>
         </div>
       </header>

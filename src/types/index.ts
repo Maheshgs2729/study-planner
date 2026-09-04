@@ -17,11 +17,30 @@ export type ResourceFileType = 'pdf' | 'image' | 'audio' | 'video' | 'doc';
 
 export type StickyColor = 'yellow' | 'pink' | 'mint' | 'blue' | 'purple';
 
+// ---------- Custom Spotify Playlist ----------
+export interface CustomPlaylist {
+  id: string;
+  name: string;
+  url: string;
+  embedUri: string;
+  createdAt: string;
+}
+
 // ---------- User ----------
 export interface User {
   id: string;
   name: string;
   email: string;
+  avatar?: string;
+  university?: string;
+  major?: string;
+  semester?: string;
+  googleLinked?: boolean;
+  googleEmail?: string;
+  spotifyLinked?: boolean;
+  spotifyUser?: string;
+  customPlaylists?: CustomPlaylist[];
+  isAuthenticated?: boolean;
   streak: number;
   longestStreak: number;
   lastLoginDate: string; // ISO date string
@@ -186,16 +205,16 @@ export interface AppState {
   wallpaper: WallpaperConfig;
 }
 
-// ---------- Subject colors palette (Cosmic Solar Theme) ----------
+// ---------- Subject colors palette (Monochrome Black & White Theme) ----------
 export const SUBJECT_COLORS = [
-  '#ff6b00', // Radiant Solar Orange
-  '#ffa726', // Corona Amber Gold
-  '#a855f7', // Deep Nebula Purple
-  '#00d2ff', // Neon Cosmic Cyan
-  '#ff453a', // Solar Flare Red
-  '#30d158', // Aurora Emerald
-  '#f43f5e', // Hot Nova Pink
-  '#38bdf8', // Starlight Blue
+  '#ffffff', // Pure Chalk White
+  '#e4e4e7', // Platinum Zinc
+  '#d4d4d8', // Light Slate
+  '#a1a1aa', // Medium Gray
+  '#71717a', // Deep Graphite
+  '#52525b', // Charcoal Zinc
+  '#f4f4f5', // Snow White
+  '#3f3f46', // Dark Onyx
 ] as const;
 
 // ---------- Curated Wallpaper Presets ----------

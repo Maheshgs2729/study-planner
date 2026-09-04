@@ -368,7 +368,32 @@ export const seedData: AppState = {
   user: {
     id: 'user-1',
     name: 'Alex Chen',
-    email: 'alex@university.edu',
+    email: 'alex.chen@university.edu',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop',
+    university: 'Stanford University',
+    major: 'Computer Science & Engineering',
+    semester: 'Semester 5 (Year 3)',
+    googleLinked: true,
+    googleEmail: 'alex.chen@gmail.com',
+    spotifyLinked: true,
+    spotifyUser: 'alexchen_beats',
+    isAuthenticated: true,
+    customPlaylists: [
+      {
+        id: 'cust-1',
+        name: 'Deep Coding Flow',
+        url: 'https://open.spotify.com/playlist/37i9dQZF1DXdLEN7aqioXM',
+        embedUri: 'https://open.spotify.com/embed/playlist/37i9dQZF1DXdLEN7aqioXM?utm_source=generator&theme=0',
+        createdAt: daysAgo(10),
+      },
+      {
+        id: 'cust-2',
+        name: 'Late Night Library Session',
+        url: 'https://open.spotify.com/playlist/37i9dQZF1DX8Uebhn9wzrS',
+        embedUri: 'https://open.spotify.com/embed/playlist/37i9dQZF1DX8Uebhn9wzrS?utm_source=generator&theme=0',
+        createdAt: daysAgo(5),
+      }
+    ],
     streak: 7,
     longestStreak: 14,
     lastLoginDate: toISO(TODAY),
@@ -388,5 +413,5 @@ export const seedData: AppState = {
     breakMinutes: 5,
     longBreakMinutes: 15,
   },
-  wallpaper: WALLPAPER_PRESETS[1], // Cozy Anime Study Desk by default
+  wallpaper: WALLPAPER_PRESETS[0], // Clean Minimal (No Wallpaper)
 };

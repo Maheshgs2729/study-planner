@@ -66,11 +66,11 @@ export default function Sidebar() {
                   whileTap={{ scale: 0.98 }}
                   className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl transition-all relative ${
                     isActive
-                      ? 'text-white font-bold shadow-lg shadow-orange-500/30 bg-gradient-to-r from-orange-500 to-amber-500 border border-orange-400/30'
-                      : 'text-muted hover:text-foreground hover:bg-surface-hover'
+                      ? 'text-black font-black shadow-lg bg-white border border-white'
+                      : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
                   }`}
                 >
-                  <item.icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-white stroke-[2.2]' : 'text-muted'}`} />
+                  <item.icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-black stroke-[2.5]' : 'text-zinc-400'}`} />
                   {!collapsed && (
                     <span className="whitespace-nowrap text-xs font-bold tracking-tight">
                       {item.label}
@@ -94,8 +94,8 @@ export default function Sidebar() {
         </div>
       </motion.aside>
 
-      {/* Mobile Bottom Tab Bar (Nur Alam Floating Style) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-xl border-t border-border">
+      {/* Mobile Bottom Tab Bar (Pure Monochrome Style) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-zinc-800">
         <div className="flex items-center justify-around h-16 px-2 overflow-x-auto">
           {navItems.slice(0, 5).map((item) => {
             const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
@@ -104,14 +104,14 @@ export default function Sidebar() {
                 <motion.div
                   whileTap={{ scale: 0.9 }}
                   className={`flex flex-col items-center gap-1 py-1 ${
-                    isActive ? 'text-primary font-bold' : 'text-muted'
+                    isActive ? 'text-white font-bold' : 'text-zinc-500'
                   }`}
                 >
                   <div className="relative">
                     {isActive && (
                       <motion.div
                         layoutId="mobile-tab-active"
-                        className="absolute -inset-1.5 rounded-xl bg-primary/10"
+                        className="absolute -inset-1.5 rounded-xl bg-white/10"
                         transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                       />
                     )}

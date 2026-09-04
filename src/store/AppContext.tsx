@@ -58,6 +58,13 @@ type Action =
   | { type: 'ADD_STICKY_NOTE'; payload: StickyNote }
   | { type: 'UPDATE_STICKY_NOTE'; payload: StickyNote }
   | { type: 'DELETE_STICKY_NOTE'; payload: string }
+  // User Profile, Auth & Spotify
+  | { type: 'UPDATE_USER_PROFILE'; payload: Partial<User> }
+  | { type: 'LOGIN_USER'; payload: { name: string; email: string; avatar?: string; googleLinked?: boolean; googleEmail?: string } }
+  | { type: 'LOGOUT_USER' }
+  | { type: 'LINK_SPOTIFY'; payload: { username: string } }
+  | { type: 'ADD_SPOTIFY_PLAYLIST'; payload: { name: string; url: string; embedUri: string } }
+  | { type: 'REMOVE_SPOTIFY_PLAYLIST'; payload: string }
   // Wallpaper
   | { type: 'SET_WALLPAPER'; payload: WallpaperConfig };
 
@@ -258,6 +265,75 @@ function appReducer(state: AppState, action: Action): AppState {
         wallpaper: action.payload,
       };
 
+    case 'UPDATE_USER_PROFILE':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
+      };
+
+    case 'LOGIN_USER':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          name: action.payload.name,
+          email: action.payload.email,
+          avatar: action.payload.avatar || state.user.avatar,
+          googleLinked: action.payload.googleLinked ?? state.user.googleLinked,
+          googleEmail: action.payload.googleEmail ?? state.user.googleEmail,
+          isAuthenticated: true,
+        },
+      };
+
+    case 'LOGOUT_USER':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          isAuthenticated: false,
+        },
+      };
+
+    case 'LINK_SPOTIFY':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          spotifyLinked: true,
+          spotifyUser: action.payload.username,
+        },
+      };
+
+    case 'ADD_SPOTIFY_PLAYLIST': {
+      const newPlaylist = {
+        id: `pl-${Date.now()}`,
+        name: action.payload.name,
+        url: action.payload.url,
+        embedUri: action.payload.embedUri,
+        createdAt: new Date().toISOString(),
+      };
+      const currentPlaylists = state.user.customPlaylists || [];
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          customPlaylists: [newPlaylist, ...currentPlaylists],
+        },
+      };
+    }
+
+    case 'REMOVE_SPOTIFY_PLAYLIST':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          customPlaylists: (state.user.customPlaylists || []).filter((p) => p.id !== action.payload),
+        },
+      };
+
     default:
       return state;
   }
@@ -310,6 +386,17 @@ interface AppContextType {
   deleteStickyNote: (id: string) => void;
   // Wallpaper
   setWallpaper: (config: WallpaperConfig) => void;
+  // Profile, Auth & Spotify
+  updateUserProfile: (profile: Partial<User>) => void;
+  loginUser: (data: { name: string; email: string; avatar?: string; googleLinked?: boolean; googleEmail?: string }) => void;
+  logoutUser: () => void;
+  linkSpotify: (username: string) => void;
+  addSpotifyPlaylist: (name: string, url: string) => void;
+  removeSpotifyPlaylist: (id: string) => void;
+  isAuthModalOpen: boolean;
+  setIsAuthModalOpen: (open: boolean) => void;
+  isProfileModalOpen: boolean;
+  setIsProfileModalOpen: (open: boolean) => void;
   isHydrated: boolean;
 }
 
@@ -645,6 +732,46 @@ export function AppProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'DELETE_STICKY_NOTE', payload: id });
   }, []);
 
+  // Modal Visibility States
+  const [isAuthModalOpen, setIsAuthModalOpen] = React.useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = React.useState(false);
+
+  // Profile, Auth & Spotify Callbacks
+  const updateUserProfile = useCallback((profile: Partial<User>) => {
+    dispatch({ type: 'UPDATE_USER_PROFILE', payload: profile });
+  }, []);
+
+  const loginUser = useCallback((data: { name: string; email: string; avatar?: string; googleLinked?: boolean; googleEmail?: string }) => {
+    dispatch({ type: 'LOGIN_USER', payload: data });
+  }, []);
+
+  const logoutUser = useCallback(() => {
+    dispatch({ type: 'LOGOUT_USER' });
+  }, []);
+
+  const linkSpotify = useCallback((username: string) => {
+    dispatch({ type: 'LINK_SPOTIFY', payload: { username } });
+  }, []);
+
+  const addSpotifyPlaylist = useCallback((name: string, url: string) => {
+    // Convert open.spotify.com to open.spotify.com/embed
+    let embedUri = url.trim();
+    if (embedUri.includes('open.spotify.com') && !embedUri.includes('/embed/')) {
+      embedUri = embedUri.replace('open.spotify.com/', 'open.spotify.com/embed/');
+    }
+    if (!embedUri.includes('?')) {
+      embedUri += '?utm_source=generator&theme=0';
+    }
+    dispatch({
+      type: 'ADD_SPOTIFY_PLAYLIST',
+      payload: { name: name.trim() || 'My Spotify Playlist', url: url.trim(), embedUri },
+    });
+  }, []);
+
+  const removeSpotifyPlaylist = useCallback((id: string) => {
+    dispatch({ type: 'REMOVE_SPOTIFY_PLAYLIST', payload: id });
+  }, []);
+
   // Wallpaper
   const setWallpaper = useCallback((config: WallpaperConfig) => {
     dispatch({ type: 'SET_WALLPAPER', payload: config });
@@ -688,6 +815,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateStickyNote,
     deleteStickyNote,
     setWallpaper,
+    updateUserProfile,
+    loginUser,
+    logoutUser,
+    linkSpotify,
+    addSpotifyPlaylist,
+    removeSpotifyPlaylist,
+    isAuthModalOpen,
+    setIsAuthModalOpen,
+    isProfileModalOpen,
+    setIsProfileModalOpen,
     isHydrated,
   };
 

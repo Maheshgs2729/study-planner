@@ -7,6 +7,8 @@ import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
 import WallpaperBackground from '@/components/wallpaper/WallpaperBackground';
 import UnifiedFloatingDock from '@/components/dock/UnifiedFloatingDock';
+import AuthModal from '@/components/auth/AuthModal';
+import ProfileModal from '@/components/profile/ProfileModal';
 
 export function ClientLayout({ children }: { children: ReactNode }) {
   return (
@@ -15,7 +17,7 @@ export function ClientLayout({ children }: { children: ReactNode }) {
         {/* Dynamic Ambience Wallpaper Backdrop */}
         <WallpaperBackground />
 
-        <div className="flex min-h-screen bg-background text-foreground selection:bg-primary selection:text-white">
+        <div className="flex min-h-screen bg-background text-foreground selection:bg-white selection:text-black">
           {/* Desktop Sidebar */}
           <Sidebar />
 
@@ -30,6 +32,10 @@ export function ClientLayout({ children }: { children: ReactNode }) {
 
           {/* Single Unified Floating Control Island (Clean, Professional, Non-overlapping) */}
           <UnifiedFloatingDock />
+
+          {/* Auth & Profile Modals */}
+          <AuthModal />
+          <ProfileModal />
         </div>
       </AppProvider>
     </ThemeProvider>
