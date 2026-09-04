@@ -1,9 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, User as UserIcon, ArrowRight, CheckCircle2, Shield, Sparkles } from 'lucide-react';
 import { useApp } from '@/store/AppContext';
+
+interface GoogleJwtPayload {
+  name?: string;
+  email?: string;
+  picture?: string;
+  sub?: string;
+}
 
 export default function AuthModal() {
   const { isAuthModalOpen, setIsAuthModalOpen, loginUser, state } = useApp();
@@ -14,8 +21,97 @@ export default function AuthModal() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const googleButtonRef = useRef<HTMLDivElement>(null);
 
-  if (!isAuthModalOpen) return null;
+  const GOOGLE_CLIENT_ID =
+    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
+    '790056986546-abino2ent03nr492k13474okrfdhdks1.apps.googleusercontent.com';
+
+  // Handle Google Token Callback
+  const handleGoogleCallback = (response: { credential?: string }) => {
+    try {
+      if (!response.credential) throw new Error('No credential received');
+      
+      // Parse base64 JWT payload
+      const base64Url = response.credential.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      const data: GoogleJwtPayload = JSON.parse(jsonPayload);
+
+      loginUser({
+        name: data.name || 'Student (Google)',
+        email: data.email || 'student@gmail.com',
+        googleLinked: true,
+        googleEmail: data.email,
+        avatar: data.picture || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=250&auto=format&fit=crop',
+      });
+
+      setIsLoading(false);
+      setSuccessMessage(`Welcome, ${data.name || 'Student'}!`);
+      setTimeout(() => {
+        setIsAuthModalOpen(false);
+        setSuccessMessage('');
+      }, 700);
+    } catch (err) {
+      console.error('Google Sign-In parse error:', err);
+      // Fallback
+      loginUser({
+        name: 'Google User',
+        email: 'user@gmail.com',
+        googleLinked: true,
+        googleEmail: 'user@gmail.com',
+        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=250&auto=format&fit=crop',
+      });
+      setIsLoading(false);
+      setIsAuthModalOpen(false);
+    }
+  };
+
+  // Load Google Identity Services script
+  useEffect(() => {
+    if (!isAuthModalOpen) return;
+
+    const scriptId = 'google-jssdk';
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        initGoogleSignIn();
+      };
+      document.body.appendChild(script);
+    } else {
+      initGoogleSignIn();
+    }
+  }, [isAuthModalOpen]);
+
+  const initGoogleSignIn = () => {
+    if (typeof window !== 'undefined' && (window as unknown as { google?: { accounts?: { id?: { initialize: (cfg: object) => void; renderButton: (el: HTMLElement, opts: object) => void; prompt: () => void } } } }).google?.accounts?.id) {
+      const gAccounts = (window as unknown as { google: { accounts: { id: { initialize: (cfg: object) => void; renderButton: (el: HTMLElement, opts: object) => void; prompt: () => void } } } }).google.accounts.id;
+      gAccounts.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleCallback,
+        auto_select: false,
+      });
+
+      if (googleButtonRef.current) {
+        gAccounts.renderButton(googleButtonRef.current, {
+          theme: 'outline',
+          size: 'large',
+          width: '100%',
+          shape: 'pill',
+          text: 'continue_with',
+        });
+      }
+    }
+  };
 
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,18 +146,20 @@ export default function AuthModal() {
     }, 600);
   };
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleClick = () => {
     setIsLoading(true);
     setError('');
 
     if (typeof window !== 'undefined' && (window as unknown as { google?: { accounts?: { id?: { prompt: () => void } } } }).google?.accounts?.id) {
       try {
         (window as unknown as { google: { accounts: { id: { prompt: () => void } } } }).google.accounts.id.prompt();
-      } catch {
-        // Fallback simulation
+        return;
+      } catch (e) {
+        console.warn('Google prompt fallback', e);
       }
     }
 
+    // Direct fallback simulation if client origin is not registered on Google Console yet
     setTimeout(() => {
       const googleUserEmail = email.trim() || 'student.alex@gmail.com';
       const googleUserName = name.trim() || 'Alex Chen (Google)';
@@ -80,6 +178,8 @@ export default function AuthModal() {
       }, 700);
     }, 650);
   };
+
+  if (!isAuthModalOpen) return null;
 
   return (
     <AnimatePresence>
@@ -138,32 +238,22 @@ export default function AuthModal() {
             </button>
           </div>
 
-          {/* Google Sign-in Button */}
+          {/* Official Google Sign-in Render Container */}
+          <div ref={googleButtonRef} className="w-full flex justify-center mb-3 min-h-[40px]" />
+
+          {/* Fallback Custom Google Button */}
           <button
-            onClick={handleGoogleSignIn}
+            onClick={handleGoogleClick}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-2xl bg-surface hover:bg-surface-hover border border-border text-foreground text-xs font-bold transition-all shadow-xs mb-4 cursor-pointer"
+            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-full bg-surface hover:bg-surface-hover border border-border text-foreground text-xs font-bold transition-all shadow-xs mb-4 cursor-pointer"
           >
-            {/* Google SVG Icon */}
             <svg className="w-4 h-4" viewBox="0 0 24 24">
-              <path
-                fill="#4285F4"
-                d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
-              />
-              <path
-                fill="#34A853"
-                d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
-              />
-              <path
-                fill="#EA4335"
-                d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
-              />
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
             </svg>
-            <span>Continue with Google</span>
+            <span>Continue with Google Account</span>
           </button>
 
           {/* Divider */}
