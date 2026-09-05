@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Lock, User as UserIcon, ArrowRight, CheckCircle2, Shield, Sparkles } from 'lucide-react';
+import { X, Mail, Lock, User as UserIcon, ArrowRight, CheckCircle2, Shield, Sparkles, UserCheck, AlertCircle } from 'lucide-react';
 import { useApp } from '@/store/AppContext';
 
 interface GoogleJwtPayload {
@@ -59,12 +59,12 @@ export default function AuthModal() {
       }, 700);
     } catch (err) {
       console.error('Google Sign-In parse error:', err);
-      // Fallback
+      // Instant Fallback
       loginUser({
-        name: 'Google User',
-        email: 'user@gmail.com',
+        name: 'Alex Chen (Google)',
+        email: 'alex.chen@gmail.com',
         googleLinked: true,
-        googleEmail: 'user@gmail.com',
+        googleEmail: 'alex.chen@gmail.com',
         avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=250&auto=format&fit=crop',
       });
       setIsLoading(false);
@@ -159,7 +159,7 @@ export default function AuthModal() {
       }
     }
 
-    // Direct fallback simulation if client origin is not registered on Google Console yet
+    // Direct fallback simulation if Google OAuth Client ID has invalid origin
     setTimeout(() => {
       const googleUserEmail = email.trim() || 'student.alex@gmail.com';
       const googleUserName = name.trim() || 'Alex Chen (Google)';
@@ -177,6 +177,19 @@ export default function AuthModal() {
         setSuccessMessage('');
       }, 700);
     }, 650);
+  };
+
+  const handleQuickStudentLogin = () => {
+    loginUser({
+      name: 'Alex Chen',
+      email: 'alex.chen@university.edu',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop',
+    });
+    setSuccessMessage('Signed in as Alex Chen!');
+    setTimeout(() => {
+      setIsAuthModalOpen(false);
+      setSuccessMessage('');
+    }, 600);
   };
 
   if (!isAuthModalOpen) return null;
@@ -245,7 +258,7 @@ export default function AuthModal() {
           <button
             onClick={handleGoogleClick}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-full bg-surface hover:bg-surface-hover border border-border text-foreground text-xs font-bold transition-all shadow-xs mb-4 cursor-pointer"
+            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-full bg-surface hover:bg-surface-hover border border-border text-foreground text-xs font-bold transition-all shadow-xs mb-3 cursor-pointer"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
@@ -256,17 +269,27 @@ export default function AuthModal() {
             <span>Continue with Google Account</span>
           </button>
 
+          {/* Quick Demo Student Sign In */}
+          <button
+            onClick={handleQuickStudentLogin}
+            className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-border text-foreground text-xs font-semibold transition-all mb-4 cursor-pointer"
+          >
+            <UserCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>1-Click Demo Login (Alex Chen)</span>
+          </button>
+
           {/* Divider */}
           <div className="flex items-center gap-3 my-4">
             <div className="flex-1 h-px bg-border" />
-            <span className="text-[10px] font-bold text-muted uppercase tracking-wider">Or with email</span>
+            <span className="text-[10px] font-bold text-muted uppercase tracking-wider">Or with student email</span>
             <div className="flex-1 h-px bg-border" />
           </div>
 
           {/* Error Banner */}
           {error && (
-            <div className="p-3 mb-4 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs font-medium">
-              {error}
+            <div className="p-3 mb-4 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs font-medium flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{error}</span>
             </div>
           )}
 
