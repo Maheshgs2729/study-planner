@@ -9,6 +9,7 @@ import WallpaperBackground from '@/components/wallpaper/WallpaperBackground';
 import UnifiedFloatingDock from '@/components/dock/UnifiedFloatingDock';
 import AuthModal from '@/components/auth/AuthModal';
 import ProfileModal from '@/components/profile/ProfileModal';
+import SignInBanner from '@/components/auth/SignInBanner';
 
 export function ClientLayout({ children }: { children: ReactNode }) {
   return (
@@ -16,6 +17,9 @@ export function ClientLayout({ children }: { children: ReactNode }) {
       <AppProvider>
         {/* Dynamic Ambience Wallpaper Backdrop */}
         <WallpaperBackground />
+
+        {/* Entrance Sign-In & Google One-Tap Notification */}
+        <SignInBanner />
 
         <div className="flex min-h-screen bg-background text-foreground selection:bg-white selection:text-black">
           {/* Desktop Sidebar */}

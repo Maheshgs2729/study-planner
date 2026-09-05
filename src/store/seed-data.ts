@@ -375,9 +375,9 @@ export const seedData: AppState = {
     semester: 'Semester 5 (Year 3)',
     googleLinked: true,
     googleEmail: 'alex.chen@gmail.com',
-    spotifyLinked: true,
-    spotifyUser: 'alexchen_beats',
-    isAuthenticated: true,
+    spotifyLinked: false,
+    spotifyUser: '',
+    isAuthenticated: false,
     customPlaylists: [
       {
         id: 'cust-1',
