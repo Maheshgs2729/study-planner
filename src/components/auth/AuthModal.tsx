@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Lock, User as UserIcon, ArrowRight, CheckCircle2, Shield, Sparkles, UserCheck, AlertCircle } from 'lucide-react';
+import { X, CheckCircle2, User, Eye, EyeOff, Globe } from 'lucide-react';
 import { useApp } from '@/store/AppContext';
 
 interface GoogleJwtPayload {
@@ -14,10 +14,11 @@ interface GoogleJwtPayload {
 
 export default function AuthModal() {
   const { isAuthModalOpen, setIsAuthModalOpen, loginUser, state } = useApp();
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [step, setStep] = useState<'email' | 'password' | 'signup'>('email');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -32,7 +33,6 @@ export default function AuthModal() {
     try {
       if (!response.credential) throw new Error('No credential received');
       
-      // Parse base64 JWT payload
       const base64Url = response.credential.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       const jsonPayload = decodeURIComponent(
@@ -44,7 +44,7 @@ export default function AuthModal() {
       const data: GoogleJwtPayload = JSON.parse(jsonPayload);
 
       loginUser({
-        name: data.name || 'Student (Google)',
+        name: data.name || 'Google User',
         email: data.email || 'student@gmail.com',
         googleLinked: true,
         googleEmail: data.email,
@@ -93,8 +93,8 @@ export default function AuthModal() {
   }, [isAuthModalOpen]);
 
   const initGoogleSignIn = () => {
-    if (typeof window !== 'undefined' && (window as unknown as { google?: { accounts?: { id?: { initialize: (cfg: object) => void; renderButton: (el: HTMLElement, opts: object) => void; prompt: () => void } } } }).google?.accounts?.id) {
-      const gAccounts = (window as unknown as { google: { accounts: { id: { initialize: (cfg: object) => void; renderButton: (el: HTMLElement, opts: object) => void; prompt: () => void } } } }).google.accounts.id;
+    if (typeof window !== 'undefined' && (window as unknown as { google?: { accounts?: { id?: { initialize: (cfg: object) => void; renderButton: (el: HTMLElement, opts: object) => void } } } }).google?.accounts?.id) {
+      const gAccounts = (window as unknown as { google: { accounts: { id: { initialize: (cfg: object) => void; renderButton: (el: HTMLElement, opts: object) => void } } } }).google.accounts.id;
       gAccounts.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogleCallback,
@@ -105,7 +105,7 @@ export default function AuthModal() {
         gAccounts.renderButton(googleButtonRef.current, {
           theme: 'outline',
           size: 'large',
-          width: '100%',
+          width: '380',
           shape: 'pill',
           text: 'continue_with',
         });
@@ -113,260 +113,419 @@ export default function AuthModal() {
     }
   };
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (!email.trim() || !password.trim()) {
-      setError('Please fill in all required fields.');
-      return;
-    }
-    if (mode === 'signup' && !name.trim()) {
-      setError('Please enter your full name.');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long.');
-      return;
-    }
-
-    setIsLoading(true);
-    setTimeout(() => {
-      loginUser({
-        name: mode === 'signup' ? name.trim() : email.split('@')[0],
-        email: email.trim(),
-        avatar: state.user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop',
-      });
-      setIsLoading(false);
-      setSuccessMessage(mode === 'signin' ? 'Signed in successfully!' : 'Account created successfully!');
-      setTimeout(() => {
-        setIsAuthModalOpen(false);
-        setSuccessMessage('');
-      }, 700);
-    }, 600);
-  };
-
-  const handleGoogleClick = () => {
-    setIsLoading(true);
-    setError('');
-
-    if (typeof window !== 'undefined' && (window as unknown as { google?: { accounts?: { id?: { prompt: () => void } } } }).google?.accounts?.id) {
-      try {
-        (window as unknown as { google: { accounts: { id: { prompt: () => void } } } }).google.accounts.id.prompt();
+    if (step === 'email') {
+      if (!email.trim()) {
+        setError('Enter an email or phone number');
         return;
-      } catch (e) {
-        console.warn('Google prompt fallback', e);
       }
+      // Proceed to password step
+      setStep('password');
+      return;
     }
 
-    // Direct fallback simulation if Google OAuth Client ID has invalid origin
+    if (step === 'password') {
+      if (!password.trim()) {
+        setError('Enter a password');
+        return;
+      }
+      setIsLoading(true);
+      setTimeout(() => {
+        loginUser({
+          name: email.split('@')[0],
+          email: email.trim(),
+          avatar: state.user.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop',
+        });
+        setIsLoading(false);
+        setSuccessMessage('Signed in successfully!');
+        setTimeout(() => {
+          setIsAuthModalOpen(false);
+          setSuccessMessage('');
+          setStep('email');
+        }, 600);
+      }, 500);
+      return;
+    }
+
+    if (step === 'signup') {
+      if (!name.trim()) {
+        setError('Enter your full name');
+        return;
+      }
+      if (!email.trim()) {
+        setError('Enter your email');
+        return;
+      }
+      if (password.length < 6) {
+        setError('Use 6 characters or more for your password');
+        return;
+      }
+      setIsLoading(true);
+      setTimeout(() => {
+        loginUser({
+          name: name.trim(),
+          email: email.trim(),
+          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop',
+        });
+        setIsLoading(false);
+        setSuccessMessage('Account created successfully!');
+        setTimeout(() => {
+          setIsAuthModalOpen(false);
+          setSuccessMessage('');
+          setStep('email');
+        }, 600);
+      }, 500);
+    }
+  };
+
+  const handleQuickGoogleSelect = (userAccount: { name: string; email: string; avatar: string }) => {
+    setIsLoading(true);
     setTimeout(() => {
-      const googleUserEmail = email.trim() || 'student.alex@gmail.com';
-      const googleUserName = name.trim() || 'Alex Chen (Google)';
       loginUser({
-        name: googleUserName,
-        email: googleUserEmail,
+        name: userAccount.name,
+        email: userAccount.email,
         googleLinked: true,
-        googleEmail: googleUserEmail,
-        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=250&auto=format&fit=crop',
+        googleEmail: userAccount.email,
+        avatar: userAccount.avatar,
       });
       setIsLoading(false);
-      setSuccessMessage('Connected with Google Account!');
+      setSuccessMessage(`Signed in as ${userAccount.name}`);
       setTimeout(() => {
         setIsAuthModalOpen(false);
         setSuccessMessage('');
-      }, 700);
-    }, 650);
-  };
-
-  const handleQuickStudentLogin = () => {
-    loginUser({
-      name: 'Alex Chen',
-      email: 'alex.chen@university.edu',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop',
-    });
-    setSuccessMessage('Signed in as Alex Chen!');
-    setTimeout(() => {
-      setIsAuthModalOpen(false);
-      setSuccessMessage('');
-    }, 600);
+      }, 600);
+    }, 450);
   };
 
   if (!isAuthModalOpen) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md">
+      {/* Centered Modal Backdrop */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 15 }}
+          initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 15 }}
-          transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-          className="w-full max-w-md bg-surface border border-border rounded-[28px] p-6 sm:p-8 shadow-2xl relative overflow-hidden text-foreground"
+          exit={{ opacity: 0, scale: 0.95, y: 10 }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-[460px] bg-white dark:bg-[#1f1f1f] border border-[#dadce0] dark:border-[#444746] rounded-[28px] p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] relative text-[#202124] dark:text-[#e8eaed] font-sans"
         >
           {/* Close Button */}
           <button
-            onClick={() => setIsAuthModalOpen(false)}
-            className="absolute top-5 right-5 p-2 rounded-full bg-slate-100 dark:bg-zinc-900 hover:bg-slate-200 dark:hover:bg-zinc-800 text-muted hover:text-foreground transition-colors border border-border cursor-pointer"
+            onClick={() => {
+              setIsAuthModalOpen(false);
+              setStep('email');
+              setError('');
+            }}
+            className="absolute top-5 right-5 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-[#2e2e2e] text-[#5f6368] dark:text-[#9aa0a6] transition-colors cursor-pointer"
+            aria-label="Close"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
 
-          {/* Header */}
+          {/* Google 4-Color Logo */}
+          <div className="flex justify-center mb-4">
+            <svg className="w-10 h-10" viewBox="0 0 24 24">
+              <path
+                fill="#4285F4"
+                d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
+              />
+              <path
+                fill="#34A853"
+                d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
+              />
+              <path
+                fill="#EA4335"
+                d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+              />
+            </svg>
+          </div>
+
+          {/* Google Header Titles */}
           <div className="text-center mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-black flex items-center justify-center mx-auto mb-3 font-black shadow-md">
-              <Sparkles className="w-6 h-6 fill-current" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-foreground">
-              {mode === 'signin' ? 'Welcome Back' : 'Create Student Account'}
-            </h2>
-            <p className="text-xs text-muted mt-1">
-              {mode === 'signin'
-                ? 'Sign in to access your course timetable, tasks, and notes'
-                : 'Join Study Planner Pro to organize your entire semester'}
+            <h1 className="text-2xl font-normal text-[#202124] dark:text-[#e8eaed] tracking-tight">
+              {step === 'signup' ? 'Create a Google Account' : 'Sign in'}
+            </h1>
+            <p className="text-sm text-[#5f6368] dark:text-[#9aa0a6] mt-1.5 font-normal">
+              to continue to <span className="font-medium text-[#202124] dark:text-[#e8eaed]">Study Planner Pro</span>
             </p>
           </div>
 
-          {/* Mode Switcher Tabs */}
-          <div className="flex p-1 rounded-2xl bg-slate-100 dark:bg-zinc-900 border border-border mb-5">
-            <button
-              onClick={() => { setMode('signin'); setError(''); }}
-              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                mode === 'signin'
-                  ? 'bg-surface text-foreground shadow-xs'
-                  : 'text-muted hover:text-foreground'
-              }`}
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => { setMode('signup'); setError(''); }}
-              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                mode === 'signup'
-                  ? 'bg-surface text-foreground shadow-xs'
-                  : 'text-muted hover:text-foreground'
-              }`}
-            >
-              Create Account
-            </button>
-          </div>
-
-          {/* Official Google Sign-in Render Container */}
-          <div ref={googleButtonRef} className="w-full flex justify-center mb-3 min-h-[40px]" />
-
-          {/* Fallback Custom Google Button */}
-          <button
-            onClick={handleGoogleClick}
-            disabled={isLoading}
-            className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-full bg-surface hover:bg-surface-hover border border-border text-foreground text-xs font-bold transition-all shadow-xs mb-3 cursor-pointer"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
-              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
-              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
-              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-            </svg>
-            <span>Continue with Google Account</span>
-          </button>
-
-          {/* Quick Demo Student Sign In */}
-          <button
-            onClick={handleQuickStudentLogin}
-            className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-border text-foreground text-xs font-semibold transition-all mb-4 cursor-pointer"
-          >
-            <UserCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            <span>1-Click Demo Login (Alex Chen)</span>
-          </button>
-
-          {/* Divider */}
-          <div className="flex items-center gap-3 my-4">
-            <div className="flex-1 h-px bg-border" />
-            <span className="text-[10px] font-bold text-muted uppercase tracking-wider">Or with student email</span>
-            <div className="flex-1 h-px bg-border" />
-          </div>
-
-          {/* Error Banner */}
-          {error && (
-            <div className="p-3 mb-4 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs font-medium flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-
           {/* Success Banner */}
           {successMessage && (
-            <div className="p-3 mb-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800/50 text-emerald-700 dark:text-emerald-300 text-xs font-medium flex items-center gap-2">
+            <div className="p-3.5 mb-5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-medium flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>{successMessage}</span>
             </div>
           )}
 
-          {/* Form */}
-          <form onSubmit={handleEmailSubmit} className="space-y-3.5">
-            {mode === 'signup' && (
-              <div>
-                <label className="block text-[11px] font-bold text-muted uppercase tracking-wider mb-1">
-                  Full Name
-                </label>
+          {/* STEP 1: Email / Account Chooser */}
+          {step === 'email' && (
+            <div className="space-y-4">
+              {/* Quick Google Account Chooser Box */}
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleQuickGoogleSelect({
+                      name: 'Alex Chen',
+                      email: 'alex.chen@gmail.com',
+                      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop',
+                    })
+                  }
+                  className="w-full p-3 rounded-2xl border border-[#dadce0] dark:border-[#444746] hover:bg-[#f8fafd] dark:hover:bg-[#282a2d] hover:border-[#1a73e8] transition-all flex items-center justify-between group cursor-pointer text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <img
+                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop"
+                      alt="Alex"
+                      className="w-10 h-10 rounded-full object-cover border border-[#dadce0]"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-[#202124] dark:text-[#e8eaed]">Alex Chen</div>
+                      <div className="text-xs text-[#5f6368] dark:text-[#9aa0a6]">alex.chen@gmail.com</div>
+                    </div>
+                  </div>
+                  <span className="text-xs font-medium text-[#1a73e8] dark:text-[#8ab4f8] group-hover:underline">
+                    Sign in
+                  </span>
+                </button>
+
+                {/* Google Official Button Render Anchor */}
+                <div ref={googleButtonRef} className="w-full flex justify-center py-1 min-h-[40px]" />
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3 my-4">
+                <div className="flex-1 h-px bg-[#dadce0] dark:bg-[#444746]" />
+                <span className="text-xs text-[#5f6368] dark:text-[#9aa0a6]">or use another account</span>
+                <div className="flex-1 h-px bg-[#dadce0] dark:bg-[#444746]" />
+              </div>
+
+              {/* Google Material Input Form */}
+              <form onSubmit={handleNextStep} className="space-y-4">
                 <div className="relative">
-                  <UserIcon className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
                   <input
                     type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Alex Chen"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-hover border border-border focus:border-slate-900 dark:focus:border-white focus:bg-surface outline-none text-xs text-foreground placeholder:text-muted/60 font-medium transition-all"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setError('');
+                    }}
+                    placeholder="Email or phone"
+                    className={`w-full px-4 py-3.5 rounded-xl border text-sm text-[#202124] dark:text-[#e8eaed] bg-transparent outline-none transition-all placeholder:text-[#5f6368] dark:placeholder:text-[#80868b] ${
+                      error
+                        ? 'border-[#d93025] focus:ring-1 focus:ring-[#d93025]'
+                        : 'border-[#dadce0] dark:border-[#444746] focus:border-[#1a73e8] focus:ring-2 focus:ring-[#1a73e8]/20'
+                    }`}
+                    autoFocus
                   />
+                  {error && <p className="text-xs text-[#d93025] mt-1.5 ml-1">{error}</p>}
                 </div>
-              </div>
-            )}
 
-            <div>
-              <label className="block text-[11px] font-bold text-muted uppercase tracking-wider mb-1">
-                Student Email
-              </label>
+                <div className="flex justify-between items-center text-xs">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail('alex.chen@gmail.com');
+                      setStep('password');
+                    }}
+                    className="text-[#1a73e8] dark:text-[#8ab4f8] font-medium hover:underline cursor-pointer"
+                  >
+                    Forgot email?
+                  </button>
+                </div>
+
+                {/* Privacy Notice */}
+                <p className="text-xs text-[#5f6368] dark:text-[#9aa0a6] leading-relaxed pt-1">
+                  To continue, Google will share your name, email address, language preference, and profile picture with Study Planner Pro.
+                </p>
+
+                {/* Footer Buttons */}
+                <div className="flex items-center justify-between pt-5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setStep('signup');
+                      setError('');
+                    }}
+                    className="text-[#1a73e8] dark:text-[#8ab4f8] text-sm font-medium hover:underline cursor-pointer"
+                  >
+                    Create account
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 rounded-full bg-[#1a73e8] hover:bg-[#1557b0] text-white text-sm font-medium transition-all shadow-sm cursor-pointer"
+                  >
+                    Next
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* STEP 2: Password Input */}
+          {step === 'password' && (
+            <form onSubmit={handleNextStep} className="space-y-5">
+              {/* Selected User Pill */}
+              <div
+                onClick={() => setStep('email')}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#dadce0] dark:border-[#444746] hover:bg-slate-50 dark:hover:bg-[#282a2d] text-xs font-medium text-[#202124] dark:text-[#e8eaed] cursor-pointer mb-2"
+                title="Change account"
+              >
+                <User className="w-3.5 h-3.5 text-[#5f6368]" />
+                <span>{email || 'alex.chen@gmail.com'}</span>
+              </div>
+
               <div className="relative">
-                <Mail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError('');
+                  }}
+                  placeholder="Enter your password"
+                  className={`w-full px-4 py-3.5 pr-11 rounded-xl border text-sm text-[#202124] dark:text-[#e8eaed] bg-transparent outline-none transition-all placeholder:text-[#5f6368] ${
+                    error
+                      ? 'border-[#d93025] focus:ring-1 focus:ring-[#d93025]'
+                      : 'border-[#dadce0] dark:border-[#444746] focus:border-[#1a73e8] focus:ring-2 focus:ring-[#1a73e8]/20'
+                  }`}
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#5f6368] hover:text-[#202124] dark:hover:text-white"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+                {error && <p className="text-xs text-[#d93025] mt-1.5 ml-1">{error}</p>}
+              </div>
+
+              <div className="flex items-center justify-between text-xs">
+                <label className="flex items-center gap-2 text-[#5f6368] dark:text-[#9aa0a6] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showPassword}
+                    onChange={(e) => setShowPassword(e.target.checked)}
+                    className="rounded border-[#dadce0] text-[#1a73e8] focus:ring-[#1a73e8]"
+                  />
+                  <span>Show password</span>
+                </label>
+
+                <button
+                  type="button"
+                  onClick={() => setPassword('password123')}
+                  className="text-[#1a73e8] dark:text-[#8ab4f8] font-medium hover:underline cursor-pointer"
+                >
+                  Forgot password?
+                </button>
+              </div>
+
+              {/* Footer Buttons */}
+              <div className="flex items-center justify-between pt-5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep('email');
+                    setError('');
+                  }}
+                  className="text-[#1a73e8] dark:text-[#8ab4f8] text-sm font-medium hover:underline cursor-pointer"
+                >
+                  Back
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="px-6 py-2.5 rounded-full bg-[#1a73e8] hover:bg-[#1557b0] text-white text-sm font-medium transition-all shadow-sm cursor-pointer disabled:opacity-50"
+                >
+                  {isLoading ? 'Signing in...' : 'Sign in'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* STEP 3: Sign Up */}
+          {step === 'signup' && (
+            <form onSubmit={handleNextStep} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Full name"
+                  className="w-full px-4 py-3 rounded-xl border border-[#dadce0] dark:border-[#444746] focus:border-[#1a73e8] focus:ring-2 focus:ring-[#1a73e8]/20 text-sm text-[#202124] dark:text-[#e8eaed] bg-transparent outline-none placeholder:text-[#5f6368]"
+                  autoFocus
+                />
+              </div>
+
+              <div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="alex.chen@university.edu"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-hover border border-border focus:border-slate-900 dark:focus:border-white focus:bg-surface outline-none text-xs text-foreground placeholder:text-muted/60 font-medium transition-all"
+                  placeholder="Your student email address"
+                  className="w-full px-4 py-3 rounded-xl border border-[#dadce0] dark:border-[#444746] focus:border-[#1a73e8] focus:ring-2 focus:ring-[#1a73e8]/20 text-sm text-[#202124] dark:text-[#e8eaed] bg-transparent outline-none placeholder:text-[#5f6368]"
                 />
               </div>
-            </div>
 
-            <div>
-              <label className="block text-[11px] font-bold text-muted uppercase tracking-wider mb-1">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
+              <div>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-hover border border-border focus:border-slate-900 dark:focus:border-white focus:bg-surface outline-none text-xs text-foreground placeholder:text-muted/60 font-medium transition-all"
+                  placeholder="Create password (6+ characters)"
+                  className="w-full px-4 py-3 rounded-xl border border-[#dadce0] dark:border-[#444746] focus:border-[#1a73e8] focus:ring-2 focus:ring-[#1a73e8]/20 text-sm text-[#202124] dark:text-[#e8eaed] bg-transparent outline-none placeholder:text-[#5f6368]"
                 />
               </div>
+
+              {error && <p className="text-xs text-[#d93025]">{error}</p>}
+
+              {/* Footer Buttons */}
+              <div className="flex items-center justify-between pt-5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep('email');
+                    setError('');
+                  }}
+                  className="text-[#1a73e8] dark:text-[#8ab4f8] text-sm font-medium hover:underline cursor-pointer"
+                >
+                  Sign in instead
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="px-6 py-2.5 rounded-full bg-[#1a73e8] hover:bg-[#1557b0] text-white text-sm font-medium transition-all shadow-sm cursor-pointer disabled:opacity-50"
+                >
+                  {isLoading ? 'Creating...' : 'Next'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Google Bottom Footer */}
+          <div className="mt-8 pt-4 border-t border-[#f1f3f4] dark:border-[#3c4043] flex items-center justify-between text-[11px] text-[#5f6368] dark:text-[#9aa0a6]">
+            <div className="flex items-center gap-1">
+              <Globe className="w-3.5 h-3.5" />
+              <span>English (United States)</span>
             </div>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full mt-2 py-3 rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-black font-black text-xs hover:bg-slate-800 dark:hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
-            >
-              <span>{mode === 'signin' ? 'Sign In to Dashboard' : 'Complete Registration'}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </form>
-
-          {/* Footer Guarantee */}
-          <div className="mt-5 text-center text-[10px] text-muted flex items-center justify-center gap-1.5">
-            <Shield className="w-3.5 h-3.5 text-muted" />
-            <span>Encrypted student data saved securely</span>
+            <div className="flex items-center gap-3">
+              <a href="#" className="hover:underline">Help</a>
+              <a href="#" className="hover:underline">Privacy</a>
+              <a href="#" className="hover:underline">Terms</a>
+            </div>
           </div>
         </motion.div>
       </div>
