@@ -330,7 +330,7 @@ export default function UnifiedFloatingDock() {
         }, 120);
       }}
       whileDrag={{ scale: 1.02, cursor: 'grabbing' }}
-      className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 select-none cursor-grab active:cursor-grabbing flex flex-col items-end gap-3"
+      className="fixed bottom-[calc(env(safe-area-inset-bottom,0px)+4.75rem)] md:bottom-6 right-3 sm:right-4 md:right-6 z-40 select-none cursor-grab active:cursor-grabbing flex flex-col items-end gap-3 max-w-[calc(100vw-1.5rem)]"
       aria-label="Smart Study Control Island"
     >
       {/* 1. EXPANDED PANEL (Only ONE open at any time) */}
@@ -342,7 +342,7 @@ export default function UnifiedFloatingDock() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 20 }}
             transition={{ type: 'spring', stiffness: 350, damping: 26 }}
-            className="w-[calc(100vw-2.5rem)] sm:w-[420px] rounded-[28px] border border-border shadow-2xl overflow-hidden bg-surface/98 backdrop-blur-2xl flex flex-col h-[550px] max-h-[82vh] cursor-default"
+            className="w-[calc(100vw-1.5rem)] sm:w-[420px] rounded-[28px] border border-border shadow-2xl overflow-hidden bg-surface/98 backdrop-blur-2xl flex flex-col h-[520px] max-h-[75dvh] cursor-default"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-border bg-primary/10 cursor-grab active:cursor-grabbing">
@@ -945,10 +945,10 @@ export default function UnifiedFloatingDock() {
       {/* 2. SINGLE UNIFIED SLIM FLOATING CONTROL DOCK */}
       <motion.div
         whileHover={{ scale: 1.03 }}
-        className="flex items-center gap-1.5 p-1.5 rounded-full bg-surface/90 backdrop-blur-2xl border border-border shadow-xl transition-shadow hover:border-slate-300 dark:hover:border-zinc-700"
+        className="flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-surface/90 backdrop-blur-2xl border border-border shadow-xl transition-shadow hover:border-slate-300 dark:hover:border-zinc-700 touch-manipulation"
       >
         {/* Drag Grab Handle */}
-        <div className="pl-2 pr-1 text-muted opacity-60 hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing">
+        <div className="pl-2 pr-1 min-h-[44px] flex items-center justify-center text-muted opacity-60 hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing">
           <GripHorizontal className="w-3.5 h-3.5" />
         </div>
 
@@ -956,7 +956,7 @@ export default function UnifiedFloatingDock() {
         <motion.button
           whileTap={{ scale: 0.92 }}
           onClick={() => handleDockIconClick('leo')}
-          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black transition-all cursor-pointer ${
+          className={`flex items-center justify-center gap-1.5 px-3.5 py-1.5 min-h-[44px] rounded-full text-xs font-black transition-all cursor-pointer touch-manipulation ${
             activePanel === 'leo'
               ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-md'
               : 'bg-surface-hover text-foreground hover:bg-slate-200 dark:hover:bg-zinc-800 border border-border'
@@ -971,7 +971,7 @@ export default function UnifiedFloatingDock() {
         <motion.button
           whileTap={{ scale: 0.92 }}
           onClick={() => handleDockIconClick('music')}
-          className={`p-2 rounded-full transition-all cursor-pointer ${
+          className={`w-11 h-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full transition-all cursor-pointer touch-manipulation ${
             activePanel === 'music'
               ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-md'
               : 'text-muted hover:text-foreground hover:bg-surface-hover'
@@ -985,7 +985,7 @@ export default function UnifiedFloatingDock() {
         <motion.button
           whileTap={{ scale: 0.92 }}
           onClick={() => handleDockIconClick('stickies')}
-          className={`p-2 rounded-full transition-all cursor-pointer ${
+          className={`w-11 h-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full transition-all cursor-pointer touch-manipulation ${
             activePanel === 'stickies'
               ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-md'
               : 'text-muted hover:text-foreground hover:bg-surface-hover'
@@ -999,7 +999,7 @@ export default function UnifiedFloatingDock() {
         <motion.button
           whileTap={{ scale: 0.92 }}
           onClick={() => handleDockIconClick('actions')}
-          className={`p-2 rounded-full transition-all cursor-pointer ${
+          className={`w-11 h-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full transition-all cursor-pointer touch-manipulation ${
             activePanel === 'actions'
               ? 'bg-slate-900 text-white dark:bg-white dark:text-black shadow-md rotate-45'
               : 'text-muted hover:text-foreground hover:bg-surface-hover'

@@ -21,23 +21,26 @@ export function ClientLayout({ children }: { children: ReactNode }) {
         {/* Entrance Sign-In & Google One-Tap Notification */}
         <SignInBanner />
 
-        <div className="flex min-h-screen bg-background text-foreground selection:bg-white selection:text-black">
-          {/* Desktop Sidebar */}
+        {/* Root Layout Container with Safe Area & 100dvh Lock */}
+        <div className="flex min-h-[100dvh] h-[100dvh] w-full max-w-[100vw] overflow-x-hidden bg-background text-foreground selection:bg-white selection:text-black">
+          {/* Desktop Sidebar (Fixed Left) */}
           <Sidebar />
 
-          {/* Main Content Area */}
-          <div className="flex-1 flex flex-col md:ml-[260px] min-h-screen">
+          {/* Main App Viewport & Scroll Container */}
+          <div className="flex-1 flex flex-col md:ml-[260px] h-[100dvh] max-h-[100dvh] w-full max-w-full overflow-x-hidden overflow-y-auto custom-scrollbar">
+            {/* Top Navigation Bar with Safe Area Inset */}
             <TopBar />
             
-            <main className="flex-1 p-4 md:p-7 pb-20 md:pb-10 max-w-7xl w-full mx-auto">
+            {/* Scrollable Main Content with Ergonomic Bottom Padding */}
+            <main className="flex-1 p-3.5 sm:p-5 md:p-7 pb-[calc(env(safe-area-inset-bottom,0px)+6.5rem)] md:pb-12 max-w-7xl w-full mx-auto overflow-x-hidden">
               {children}
             </main>
           </div>
 
-          {/* Single Unified Floating Control Island (Clean, Professional, Non-overlapping) */}
+          {/* Single Unified Floating Control Island */}
           <UnifiedFloatingDock />
 
-          {/* Auth & Profile Modals */}
+          {/* Centered Auth & Profile Modals */}
           <AuthModal />
           <ProfileModal />
         </div>

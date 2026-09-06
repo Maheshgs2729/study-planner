@@ -16,10 +16,10 @@ export default function TopBar() {
 
   return (
     <>
-      <header className="sticky top-0 z-30 bg-surface/80 backdrop-blur-xl border-b border-border transition-colors">
-        <div className="flex items-center justify-between h-16 px-4 md:px-7">
+      <header className="sticky top-0 z-30 bg-surface/90 backdrop-blur-xl border-b border-border transition-colors pt-[env(safe-area-inset-top,0px)] w-full max-w-full overflow-hidden">
+        <div className="flex items-center justify-between h-16 px-3.5 sm:px-4 md:px-7 max-w-7xl mx-auto w-full">
           {/* Left — Brand Logo on mobile */}
-          <div className="flex items-center gap-3 md:hidden">
+          <div className="flex items-center gap-2.5 md:hidden flex-shrink-0">
             <BrandLogo size="sm" showText={true} />
           </div>
 
@@ -38,12 +38,12 @@ export default function TopBar() {
           </div>
 
           {/* Right — Actions & Profile */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
             {/* Active Streak Badge */}
             <motion.div
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-xs"
+              className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-2xs min-h-[38px]"
             >
               <motion.div
                 animate={{
@@ -55,10 +55,10 @@ export default function TopBar() {
                   repeatType: 'loop',
                 }}
               >
-                <Flame className="w-4 h-4 text-amber-500 fill-amber-500" />
+                <Flame className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-amber-500 fill-amber-500" />
               </motion.div>
-              <span className="text-xs font-black text-slate-900 dark:text-white">
-                {state.user.streak}d Streak
+              <span className="text-[11px] sm:text-xs font-black text-slate-900 dark:text-white whitespace-nowrap">
+                {state.user.streak}d
               </span>
             </motion.div>
 
@@ -67,10 +67,10 @@ export default function TopBar() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.92 }}
               onClick={() => setIsWallpaperModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-slate-800 dark:text-white border border-slate-200 dark:border-zinc-700 text-xs font-bold transition-all cursor-pointer"
+              className="flex items-center justify-center gap-1.5 p-2 sm:px-3 sm:py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-slate-800 dark:text-white border border-slate-200 dark:border-zinc-700 text-xs font-bold transition-all cursor-pointer min-h-[44px] min-w-[44px] sm:min-w-0"
               title="Change Ambience Theme"
             >
-              <ImageIcon className="w-3.5 h-3.5 opacity-70" />
+              <ImageIcon className="w-4 h-4 opacity-75" />
               <span className="hidden sm:inline">Theme</span>
             </motion.button>
 
@@ -79,7 +79,7 @@ export default function TopBar() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.9 }}
               onClick={toggleTheme}
-              className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-400 hover:text-foreground transition-colors border border-slate-200 dark:border-zinc-800 cursor-pointer"
+              className="flex items-center justify-center p-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-400 hover:text-foreground transition-colors border border-slate-200 dark:border-zinc-800 cursor-pointer min-h-[44px] min-w-[44px]"
               aria-label="Toggle theme"
             >
               <motion.div
@@ -101,7 +101,7 @@ export default function TopBar() {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => setIsProfileModalOpen(true)}
-                className="flex items-center gap-2.5 pl-2 pr-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-800 text-left transition-all cursor-pointer"
+                className="flex items-center gap-2 pl-1.5 pr-2.5 sm:pr-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-800 text-left transition-all cursor-pointer min-h-[44px]"
                 title="Edit Profile & Settings"
               >
                 <div className="relative">
@@ -132,7 +132,7 @@ export default function TopBar() {
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => setIsAuthModalOpen(true)}
-                className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-black font-black text-xs hover:bg-slate-800 dark:hover:bg-zinc-200 transition-all shadow-md cursor-pointer"
+                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-black font-black text-xs hover:bg-slate-800 dark:hover:bg-zinc-200 transition-all shadow-md cursor-pointer min-h-[44px]"
               >
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>

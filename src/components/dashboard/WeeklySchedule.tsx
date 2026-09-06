@@ -37,15 +37,15 @@ export default function WeeklySchedule() {
 
   return (
     <>
-      <div className="glass p-6 rounded-[26px] overflow-hidden">
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-zinc-900 text-foreground flex items-center justify-center font-bold border border-border">
+      <div className="glass p-5 sm:p-6 rounded-[24px] sm:rounded-[26px] overflow-hidden w-full max-w-full">
+        <div className="flex items-center justify-between mb-4 sm:mb-5">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-zinc-900 text-foreground flex items-center justify-center font-bold border border-border flex-shrink-0">
               <Calendar className="w-4 h-4" />
             </div>
-            <div>
-              <h2 className="text-base font-extrabold text-foreground leading-tight">Weekly Course Distribution</h2>
-              <span className="text-[11px] text-muted font-medium">Click any day to view or edit lectures</span>
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-base font-extrabold text-foreground leading-tight truncate">Weekly Course Distribution</h2>
+              <span className="text-[10px] sm:text-[11px] text-muted font-medium truncate block">Swipe horizontally to view days</span>
             </div>
           </div>
           <button
@@ -53,33 +53,34 @@ export default function WeeklySchedule() {
               setModalDay('monday');
               setIsModalOpen(true);
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-foreground font-bold text-xs border border-border transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-foreground font-bold text-xs border border-border transition-colors cursor-pointer min-h-[40px] flex-shrink-0"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Customize</span>
+            <span className="hidden sm:inline">Customize</span>
           </button>
         </div>
         
-        <div className="overflow-x-auto pb-2 custom-scrollbar">
-          <div className="min-w-[650px] flex gap-3">
+        {/* Horizontal containment wrapper: overscroll contained, touch-pan-x */}
+        <div className="overflow-x-auto overscroll-x-contain touch-pan-x pb-2 custom-scrollbar w-full max-w-full -mx-1 px-1">
+          <div className="min-w-[620px] flex gap-2.5 sm:gap-3">
           {grouped.map((dayData, i) => (
             <div 
               key={dayData.day} 
               onClick={() => openDayModal(dayData.key)}
-              className={`flex-1 min-w-[100px] rounded-[20px] p-3 cursor-pointer hover:scale-[1.02] transition-all border ${
+              className={`flex-1 min-w-[95px] sm:min-w-[105px] rounded-[18px] sm:rounded-[20px] p-2.5 sm:p-3 cursor-pointer hover:scale-[1.02] transition-all border touch-manipulation min-h-[44px] ${
                 dayData.isToday 
                   ? 'bg-slate-900 text-white dark:bg-zinc-900 dark:text-white border-slate-900 dark:border-white ring-2 ring-slate-900/10 dark:ring-white/20 shadow-md' 
                   : 'bg-surface-hover/60 border-border hover:border-slate-300 dark:hover:border-zinc-700'
               }`}
             >
-              <div className={`text-xs font-black mb-3 text-center flex items-center justify-center gap-1 uppercase tracking-wider ${
+              <div className={`text-xs font-black mb-2.5 text-center flex items-center justify-center gap-1 uppercase tracking-wider ${
                 dayData.isToday ? 'text-white' : 'text-muted'
               }`}>
                 <span>{dayData.day.substring(0, 3)}</span>
                 {dayData.isToday && <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />}
               </div>
               
-              <div className="space-y-2">
+              <div className="space-y-1.5 sm:space-y-2">
                 {dayData.entries.map((entry, j) => {
                   const subject = getSubject(entry.subjectId);
                   if (!subject) return null;

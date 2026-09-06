@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Study Planner Pro — Modern Apple / Notion Light & Dark Theme
-   Crisp White Cards, Sleek Typography, Subtle Shadows & Micro-Borders
+   Study Planner Pro — Mobile-First PWA & Native UI Design System
+   Locked 100dvh Viewport, iOS/Android Safe Areas, 44px Touch Targets
    ============================================================ */
 
 @theme {
@@ -22,7 +22,7 @@
   --font-mono: var(--font-geist-mono), 'Fira Code', monospace;
 }
 
-/* ---------- Light Theme (Default: Apple / Notion / Stripe Aesthetic) ---------- */
+/* ---------- Light Theme (Default) ---------- */
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
@@ -38,7 +38,7 @@
   --success: #10b981;
 }
 
-/* ---------- Dark Theme (Linear / Obsidian Aesthetic) ---------- */
+/* ---------- Dark Theme ---------- */
 .dark {
   --background: #09090b;
   --foreground: #f4f4f5;
@@ -54,7 +54,20 @@
   --success: #10b981;
 }
 
-/* ---------- Base Canvas ---------- */
+/* ---------- Native Viewport & Mobile Scroll Lock ---------- */
+html,
+body {
+  height: 100dvh;
+  min-height: 100dvh;
+  max-width: 100vw;
+  width: 100%;
+  overflow-x: hidden !important;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
 body {
   background-color: var(--background);
   background-image: 
@@ -65,9 +78,7 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
   letter-spacing: -0.012em;
-  min-height: 100vh;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
@@ -75,6 +86,27 @@ body {
   background-image: 
     radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 255, 255, 0.06), transparent 70%),
     radial-gradient(ellipse 40% 30% at 85% 95%, rgba(255, 255, 255, 0.03), transparent 60%);
+}
+
+/* ---------- Prevent iOS Auto-Zoom on Input Focus ---------- */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* ---------- Safe Area Padding Utilities ---------- */
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.pl-safe {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+.pr-safe {
+  padding-right: env(safe-area-inset-right, 0px);
 }
 
 /* ---------- Glass Card Surfaces ---------- */
@@ -86,6 +118,7 @@ body {
   border-radius: 1.5rem; /* 24px */
   box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.02);
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  max-width: 100%;
 }
 
 .dark .glass {
@@ -115,6 +148,7 @@ body {
   border-radius: 1.75rem; /* 28px */
   border: 1px solid #e2e8f0;
   box-shadow: 0 10px 35px -10px rgba(0, 0, 0, 0.06), 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+  max-width: 100%;
 }
 
 .dark .hero-gradient-card {
@@ -124,7 +158,7 @@ body {
   box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.9), 0 0 30px -10px rgba(255, 255, 255, 0.1) inset;
 }
 
-/* ---------- Refined Notion/Apple Tag Badges ---------- */
+/* ---------- Refined Tag Badges ---------- */
 .tag-indigo, .tag-mono-white {
   background: #f1f5f9;
   color: #0f172a;
@@ -159,31 +193,11 @@ body {
 }
 
 /* ---------- Sticky Notes ---------- */
-.sticky-yellow {
-  background: #fefce8;
-  color: #713f12;
-  border-color: #fef08a;
-}
-.sticky-pink {
-  background: #fdf2f8;
-  color: #831843;
-  border-color: #fbcfe8;
-}
-.sticky-mint {
-  background: #f0fdf4;
-  color: #14532d;
-  border-color: #bbf7d0;
-}
-.sticky-blue {
-  background: #eff6ff;
-  color: #1e3a8a;
-  border-color: #bfdbfe;
-}
-.sticky-purple {
-  background: #faf5ff;
-  color: #581c87;
-  border-color: #e9d5ff;
-}
+.sticky-yellow { background: #fefce8; color: #713f12; border-color: #fef08a; }
+.sticky-pink { background: #fdf2f8; color: #831843; border-color: #fbcfe8; }
+.sticky-mint { background: #f0fdf4; color: #14532d; border-color: #bbf7d0; }
+.sticky-blue { background: #eff6ff; color: #1e3a8a; border-color: #bfdbfe; }
+.sticky-purple { background: #faf5ff; color: #581c87; border-color: #e9d5ff; }
 
 .dark .sticky-yellow,
 .dark .sticky-pink,
@@ -197,8 +211,8 @@ body {
 
 /* ---------- Minimalist Modern Scrollbars ---------- */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
